@@ -10,16 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.wheather.ForecastLoader;
 import com.vladstarikov.openweather.wheather.model.Forecast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,21 +34,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String forecast = ForecastLoader.getForecast();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        //Gson gson = new Gson();
-        //gson.fromJson();
-        try {
-            //forecast = JSONObject.quote(forecast);
-            JSONObject object = new JSONObject(forecast);
-            JSONArray list = object.getJSONArray("list");
-            Forecast forecast1 = new Gson().fromJson((JsonElement) list.get(0), Forecast.class);
-            forecast1.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        List<Forecast> forecasts = ForecastLoader.getForecast();
         TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(forecast);
+        textView.setText(forecasts != null ? forecasts.toString() : null);
     }
 
     @Override

@@ -2,12 +2,20 @@ package com.vladstarikov.openweather.wheather;
 
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.vladstarikov.openweather.wheather.model.Forecast;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -24,7 +32,7 @@ public class ForecastLoader {
 
     private final static String IMG_URL = "http://openweathermap.org/img/w/";
 
-    public static String getForecast() {
+    public static List<Forecast> getForecast() {
         HttpClient loader = new HttpClient();
         try {
             return loader.execute(CITY).get();
@@ -34,9 +42,9 @@ public class ForecastLoader {
         return null;
     }
 
-    private static class HttpClient extends AsyncTask<String, Void, String> {
+    private static class HttpClient extends AsyncTask<String, Void, List<Forecast>> {
         @Override
-        protected String doInBackground(String... params) {
+        protected List<Forecast> doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             InputStream is  = null;
             try {
@@ -54,7 +62,15 @@ public class ForecastLoader {
                 }
                 is.close();
                 urlConnection.disconnect();
-                return stringBuilder.toString();
+
+                //parse JSON
+                Gson gson = new Gson();
+                JsonObject forecast5d = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
+                List<Forecast> forecasts = new ArrayList<>();
+                for (JsonElement element : forecast5d.getAsJsonArray("list")) {
+                    forecasts.add(gson.fromJson(element, Forecast.class));
+                }
+                return forecasts;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -62,11 +78,6 @@ public class ForecastLoader {
                 try {if (is != null) is.close();} catch (IOException e) {e.printStackTrace();}
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
         }
     }
 
