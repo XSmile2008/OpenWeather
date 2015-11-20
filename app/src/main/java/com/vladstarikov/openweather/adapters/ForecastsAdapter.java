@@ -49,7 +49,8 @@ public class ForecastsAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.list_item_forecast, parent, false);
         ((TextView) convertView.findViewById(R.id.textViewDate)).setText(forecast.dt_txt.substring(0, forecast.dt_txt.indexOf(" ")));
         ((TextView) convertView.findViewById(R.id.textViewTime)).setText(forecast.dt_txt.substring(forecast.dt_txt.indexOf(" ") + 1, forecast.dt_txt.length()));
-        ((TextView) convertView.findViewById(R.id.textViewTemp)).setText(String.valueOf(forecast.main.temp));
+        ((TextView) convertView.findViewById(R.id.textViewTemp)).setText(String.format("%.1f \u2103 ", forecast.main.temp));
+        ((TextView) convertView.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f",forecast.main.temp_min) + " - " + String.format("%.1f \u2103 ",forecast.main.temp_max));
         ((TextView) convertView.findViewById(R.id.textViewDescription)).setText(forecast.weather[0].description);
         Picasso.with(context).load("http://openweathermap.org/img/w/" + forecast.weather[0].icon + ".png").into((ImageView) convertView.findViewById(R.id.imageView));
         return convertView;
