@@ -33,7 +33,7 @@ public class ForecastLoader {
     private final static String IMG_URL = "http://openweathermap.org/img/w/";
 
     public static List<Forecast> getForecast() {
-        HttpClient loader = new HttpClient();
+        ForecastHttpClient loader = new ForecastHttpClient();
         try {
             return loader.execute(CITY).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -42,7 +42,7 @@ public class ForecastLoader {
         return null;
     }
 
-    private static class HttpClient extends AsyncTask<String, Void, List<Forecast>> {
+    private static class ForecastHttpClient extends AsyncTask<String, Void, List<Forecast>> {
         @Override
         protected List<Forecast> doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
@@ -80,5 +80,4 @@ public class ForecastLoader {
             return null;
         }
     }
-
 }
