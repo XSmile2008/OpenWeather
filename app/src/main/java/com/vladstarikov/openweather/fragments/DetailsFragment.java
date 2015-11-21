@@ -43,7 +43,7 @@ public class DetailsFragment extends Fragment {
         ((TextView) view.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f - %.1f \u2103",forecast.main.temp_min, forecast.main.temp_max));
         ((TextView) view.findViewById(R.id.textViewPleasure)).setText(String.format("Pleasure: %.2f hpa", forecast.main.pressure));
         ((TextView) view.findViewById(R.id.textViewHumidity)).setText(String.format("Humidity: %d %%", forecast.main.humidity));
-        ((TextView) view.findViewById(R.id.textViewRain)).setText(String.format("Rain: %.2f", forecast.rain.h3));
+        if (forecast.rain != null) ((TextView) view.findViewById(R.id.textViewRain)).setText(String.format("Rain: %.2f", forecast.rain.h3));
         ((TextView) view.findViewById(R.id.textViewClouds)).setText(String.format("Clouds: %d %%", forecast.clouds.all));
         ((TextView) view.findViewById(R.id.textViewWind)).setText(String.format("Wind: %.2f m/s %d", forecast.wind.speed, forecast.wind.deg));
         Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.weather[0].icon + ".png").into((ImageView) view.findViewById(R.id.imageView));

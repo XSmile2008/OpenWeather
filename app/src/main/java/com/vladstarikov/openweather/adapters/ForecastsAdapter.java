@@ -51,7 +51,7 @@ public class ForecastsAdapter extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_item_forecast, parent, false);
-        ((TextView) convertView.findViewById(R.id.textViewDateTime)).setText(date.toString());
+        ((TextView) convertView.findViewById(R.id.textViewDateTime)).setText(String.format("%s\n%s", date.getDate(), date.getTime()));
         ((TextView) convertView.findViewById(R.id.textViewTemp)).setText(String.format("%.1f \u2103 ", forecast.main.temp));
         ((TextView) convertView.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f - %.1f \u2103",forecast.main.temp_min, forecast.main.temp_max));
         ((TextView) convertView.findViewById(R.id.textViewDescription)).setText(String.format("%S%s", forecast.weather[0].description.substring(0, 1), forecast.weather[0].description.substring(1)));

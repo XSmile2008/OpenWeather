@@ -5,23 +5,20 @@
     android:padding="10dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:id="@+id/textViewDateTime"/>
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/imageView"
-        android:contentDescription="weather icon"/>
+        android:contentDescription="weather icon"
+        android:id="@+id/imageView"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -37,14 +34,10 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/textViewDescription"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:id="@+id/textViewDescription"/>
 
 </LinearLayout>

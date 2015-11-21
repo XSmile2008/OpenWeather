@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_row="0"
             android:layout_column="1"
-            android:text="nyan"
             android:textSize="28sp"
             android:id="@+id/textViewTemp"/>
 
@@ -44,7 +43,6 @@
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_gravity="center_horizontal"
-            android:text="punyan"
             android:id="@+id/textViewTempMinMax"/>
 
     </GridLayout>

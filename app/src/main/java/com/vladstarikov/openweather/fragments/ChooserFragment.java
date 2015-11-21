@@ -54,7 +54,6 @@ public class ChooserFragment extends Fragment {
                     chooser.choose(forecasts.get(position));
                 }
             });
-            listView.setSelection(0);//TODO:
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
     }
 
