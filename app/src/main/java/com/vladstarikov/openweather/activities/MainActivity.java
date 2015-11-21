@@ -9,8 +9,10 @@ import android.view.MenuItem;
 
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.fragments.ChooserFragment;
+import com.vladstarikov.openweather.fragments.DetailsFragment;
+import com.vladstarikov.openweather.wheather.model.Forecast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IChooser{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +21,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             ChooserFragment chooserFragment = new ChooserFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment).commit();
+            fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, "chooserFragment").commit();
+        }
+        if (findViewById(R.id.containerDetail) != null) {
+            if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack();
+            if (fragmentManager.findFragmentByTag("detailFragment") == null) {
+                DetailsFragment detailsFragment = new DetailsFragment();
+                fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, "detailFragment").commit();
+            }
         }
     }
 
@@ -44,7 +53,18 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void choose(Forecast forecast) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (findViewById(R.id.containerDetail) == null) {
+            Bundle args = new Bundle();
+            args.putSerializable("forecast", forecast);
+            DetailsFragment detailsFragment = new DetailsFragment();
+            detailsFragment.setArguments(args);
+            fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment).addToBackStack("detailFragmentBS").commit();
+        } else ((DetailsFragment) fragmentManager.findFragmentByTag("detailFragment")).update(forecast);
     }
 }
