@@ -14,6 +14,8 @@ import com.vladstarikov.openweather.wheather.model.Forecast;
 
 public class MainActivity extends AppCompatActivity implements IChooser{
 
+    private String city = "Cherkasy";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,10 @@ public class MainActivity extends AppCompatActivity implements IChooser{
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
+            Bundle args = new Bundle();
+            args.putString("city", city);
             ChooserFragment chooserFragment = new ChooserFragment();
+            chooserFragment.setArguments(args);
             fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, "chooserFragment").commit();
         }
         if (findViewById(R.id.containerDetail) != null) {
@@ -50,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements IChooser{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            ((ChooserFragment) getSupportFragmentManager().findFragmentByTag("chooserFragment")).loadForecast(city);
             return true;
         }
         return super.onOptionsItemSelected(item);

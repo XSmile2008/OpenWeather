@@ -25,17 +25,21 @@ public class ForecastLoader {
 
     private final static String APPID = "da9546c174d073130bb1d1caace0c6c3";
     private final static String SITE = "http://api.openweathermap.org/data/2.5/forecast";
-    private final static String CITY = "Cherkassy";
+    private final static String CITY = "Cherkasy";
     private final static String MODE = "json";
     private final static String UNITS = "metric";
     private final static String SOURCE = SITE + "?" + "mode=" + MODE + "&units=" + UNITS + "&appid=" + APPID + "&q=";
 
     private final static String IMG_URL = "http://openweathermap.org/img/w/";
 
-    public static List<Forecast> getForecast() {
+    public static List<Forecast> getForecast() {//TODO: remove
+        return getForecast(CITY);
+    }
+
+    public static List<Forecast> getForecast(String city) {
         ForecastHttpClient loader = new ForecastHttpClient();
         try {
-            return loader.execute(CITY).get();
+            return loader.execute(city).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

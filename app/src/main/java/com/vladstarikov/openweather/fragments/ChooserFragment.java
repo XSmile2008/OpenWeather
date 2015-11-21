@@ -25,6 +25,7 @@ import java.util.List;
 public class ChooserFragment extends Fragment {
 
     private IChooser chooser;
+    private ForecastsAdapter adapter;
     private List<Forecast> forecasts;
 
     @Override
@@ -42,10 +43,10 @@ public class ChooserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        forecasts = ForecastLoader.getForecast();
+        forecasts = ForecastLoader.getForecast(getArguments().getString("city"));
         if (forecasts != null) {
-            ForecastsAdapter adapter = new ForecastsAdapter(view.getContext(), forecasts);
-            ListView listView = (ListView) view.findViewById(R.id.listView);
+            adapter = new ForecastsAdapter(getView().getContext(), forecasts);
+            ListView listView = (ListView) getView().findViewById(R.id.listView);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -54,5 +55,10 @@ public class ChooserFragment extends Fragment {
                 }
             });
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+    }
+
+    public void loadForecast(String city) {
+        forecasts = ForecastLoader.getForecast(city);
+        adapter.notifyDataSetChanged();
     }
 }

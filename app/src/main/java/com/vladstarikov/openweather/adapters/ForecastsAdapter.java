@@ -23,8 +23,8 @@ import java.util.Locale;
  */
 public class ForecastsAdapter extends BaseAdapter {
 
-    Context context;
-    List<Forecast> forecasts;
+    private Context context;
+    private List<Forecast> forecasts;
 
     public ForecastsAdapter(Context context, List<Forecast> forecasts) {
         this.context = context;
@@ -52,7 +52,7 @@ public class ForecastsAdapter extends BaseAdapter {
 
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
         SimpleDateFormat myFormatDate = new SimpleDateFormat("E MMM dd", Locale.US);
-        SimpleDateFormat myFormatTime = new SimpleDateFormat("hh:mm", Locale.US);
+        SimpleDateFormat myFormatTime = new SimpleDateFormat("HH:mm", Locale.US);
         Date date = null;
         try {date = inputFormat.parse(forecast.dt_txt);} catch (ParseException e) {e.printStackTrace();}
 
