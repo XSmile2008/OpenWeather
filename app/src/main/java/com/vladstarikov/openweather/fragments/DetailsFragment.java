@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.vladstarikov.openweather.MyDateFormatter;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.wheather.model.Forecast;
 
@@ -35,8 +36,8 @@ public class DetailsFragment extends Fragment {
 
     public void update(Forecast forecast) {
         View view = getView();
-        //((TextView) view.findViewById(R.id.textViewDate)).setText(forecast.dt_txt.substring(0, forecast.dt_txt.indexOf(" ")));
-        //((TextView) view.findViewById(R.id.textViewTime)).setText(forecast.dt_txt.substring(forecast.dt_txt.indexOf(" ") + 1, forecast.dt_txt.length()));
+        MyDateFormatter date = new MyDateFormatter(forecast.dt_txt);
+        ((TextView) view.findViewById(R.id.textViewDateTime)).setText(date.toString());
         ((TextView) view.findViewById(R.id.textViewDescription)).setText(String.format("%S%s", forecast.weather[0].description.substring(0, 1), forecast.weather[0].description.substring(1)));
         ((TextView) view.findViewById(R.id.textViewTemp)).setText(String.format("%.1f \u2103 ", forecast.main.temp));
         ((TextView) view.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f - %.1f \u2103",forecast.main.temp_min, forecast.main.temp_max));

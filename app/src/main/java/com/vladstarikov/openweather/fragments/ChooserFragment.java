@@ -54,11 +54,16 @@ public class ChooserFragment extends Fragment {
                     chooser.choose(forecasts.get(position));
                 }
             });
+            listView.setSelection(0);//TODO:
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
     }
 
     public void loadForecast(String city) {
-        forecasts = ForecastLoader.getForecast(city);
-        adapter.notifyDataSetChanged();
+        List<Forecast> newForecasts = ForecastLoader.getForecast(city);
+        if (newForecasts != null) {
+            forecasts.clear();
+            forecasts.addAll(newForecasts);
+            adapter.notifyDataSetChanged();
+        }
     }
 }
