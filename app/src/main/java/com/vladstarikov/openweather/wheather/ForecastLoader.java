@@ -1,5 +1,6 @@
 package com.vladstarikov.openweather.wheather;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 /**
  * Created by vladstarikov on 19.11.15.
  */
@@ -32,11 +36,17 @@ public class ForecastLoader {
 
     private final static String IMG_URL = "http://openweathermap.org/img/w/";
 
-    public static List<Forecast> getForecast() {//TODO: remove
+    Context context;
+
+    public ForecastLoader(Context context) {
+        this.context = context;
+    }
+
+    public List<Forecast> getForecast() {//TODO: remove
         return getForecast(CITY);
     }
 
-    public static List<Forecast> getForecast(String city) {
+    public List<Forecast> getForecast(String city) {
         ForecastHttpClient loader = new ForecastHttpClient();
         try {
             return loader.execute(city).get();
@@ -46,7 +56,7 @@ public class ForecastLoader {
         return null;
     }
 
-    private static class ForecastHttpClient extends AsyncTask<String, Void, List<Forecast>> {
+    private class ForecastHttpClient extends AsyncTask<String, Void, List<Forecast>> {
         @Override
         protected List<Forecast> doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
@@ -76,8 +86,9 @@ public class ForecastLoader {
                 }
 
 
-                //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
-                //Realm realm = new Realm();
+                RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context).build();
+                Realm.deleteRealm(realmConfiguration);
+                Realm realm = Realm.getInstance(realmConfiguration);
                 //realm.createObjectFromJson();
 
 
