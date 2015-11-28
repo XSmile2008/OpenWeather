@@ -74,6 +74,13 @@ public class ForecastLoader {
                 for (JsonElement element : forecast5d.getAsJsonArray("list")) {
                     forecasts.add(gson.fromJson(element, Forecast.class));
                 }
+
+
+                //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
+                //Realm realm = new Realm();
+                //realm.createObjectFromJson();
+
+
                 return forecasts;
             } catch (IOException e) {
                 e.printStackTrace();

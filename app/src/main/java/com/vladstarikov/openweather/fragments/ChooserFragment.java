@@ -54,7 +54,7 @@ public class ChooserFragment extends Fragment {
                     chooser.choose(forecasts.get(position));
                 }
             });
-        } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();//TODO:  check in other place
     }
 
     public void loadForecast(String city) {

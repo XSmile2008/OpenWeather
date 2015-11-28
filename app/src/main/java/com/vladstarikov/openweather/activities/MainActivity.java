@@ -1,6 +1,7 @@
 package com.vladstarikov.openweather.activities;
 
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements IChooser{
     private final String DETAILS_FRAGMENT = "details";
 
     private String city = "Cherkasy";
+    private Forecast selectedForecast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,22 @@ public class MainActivity extends AppCompatActivity implements IChooser{
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        onSaveInstanceState(new Bundle());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("selectedForecast", selectedForecast);
+    }
+
+
+
+    @Override
     public void choose(Forecast forecast) {
+        selectedForecast = forecast;
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (findViewById(R.id.containerDetail) == null) {
             Bundle args = new Bundle();
