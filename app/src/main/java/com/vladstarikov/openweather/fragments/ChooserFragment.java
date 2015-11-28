@@ -43,10 +43,10 @@ public class ChooserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        forecasts = ForecastLoader.getForecast(getArguments().getString("city"));
+        forecasts = new ForecastLoader(view.getContext()).getForecast(getArguments().getString("city"));
         if (forecasts != null) {
-            adapter = new ForecastsAdapter(getView().getContext(), forecasts);
-            ListView listView = (ListView) getView().findViewById(R.id.listView);
+            adapter = new ForecastsAdapter(view.getContext(), forecasts);
+            ListView listView = (ListView) view.findViewById(R.id.listView);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -58,7 +58,7 @@ public class ChooserFragment extends Fragment {
     }
 
     public void loadForecast(String city) {
-        List<Forecast> newForecasts = ForecastLoader.getForecast(city);
+        List<Forecast> newForecasts = new ForecastLoader(getContext()).getForecast(city);
         if (newForecasts != null) {
             forecasts.clear();
             forecasts.addAll(newForecasts);

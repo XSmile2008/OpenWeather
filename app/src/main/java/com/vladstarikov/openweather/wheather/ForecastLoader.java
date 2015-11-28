@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.vladstarikov.openweather.wheather.model.Forecast;
+import com.vladstarikov.openweather.wheather.model.RealmWeather;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,6 +90,8 @@ public class ForecastLoader {
                 RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context).build();
                 Realm.deleteRealm(realmConfiguration);
                 Realm realm = Realm.getInstance(realmConfiguration);
+                JsonObject weather = forecast5d.getAsJsonArray("list").get(0).getAsJsonObject().getAsJsonObject("weather");//TODO: not work
+                realm.createObjectFromJson(RealmWeather.class, weather.toString());
                 //realm.createObjectFromJson();
 
 
