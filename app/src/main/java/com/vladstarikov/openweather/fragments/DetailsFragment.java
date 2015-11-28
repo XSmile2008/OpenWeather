@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.vladstarikov.openweather.MyDateFormatter;
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.wheather.model.Forecast;
+import com.vladstarikov.openweather.weather.model.Forecast;
 
 /**
  * Created by vladstarikov on 19.11.15.

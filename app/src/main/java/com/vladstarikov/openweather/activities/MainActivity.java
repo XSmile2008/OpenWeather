@@ -16,7 +16,7 @@ import android.widget.EditText;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.fragments.ChooserFragment;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
-import com.vladstarikov.openweather.wheather.model.Forecast;
+import com.vladstarikov.openweather.weather.model.Forecast;
 
 public class MainActivity extends AppCompatActivity implements IChooser{
 

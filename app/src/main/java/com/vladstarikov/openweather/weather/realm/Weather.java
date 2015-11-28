@@ -1,13 +1,11 @@
-package com.vladstarikov.openweather.wheather.model;
-
-import java.io.Serializable;
+package com.vladstarikov.openweather.weather.realm;
 
 import io.realm.RealmObject;
 
 /**
  * Created by vladstarikov on 28.11.15.
  */
-public class RealmWeather extends RealmObject implements Serializable {
+public class Weather extends RealmObject {
     private int id;
     private String main;
     private String description;

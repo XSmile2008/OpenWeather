@@ -7,15 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.activities.IChooser;
 import com.vladstarikov.openweather.adapters.ForecastsAdapter;
-import com.vladstarikov.openweather.wheather.ForecastLoader;
-import com.vladstarikov.openweather.wheather.model.Forecast;
+import com.vladstarikov.openweather.weather.ForecastLoader;
+import com.vladstarikov.openweather.weather.model.Forecast;
 
 import java.util.List;
 
@@ -43,26 +40,29 @@ public class ChooserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        forecasts = new ForecastLoader(view.getContext()).getForecast(getArguments().getString("city"));
-        if (forecasts != null) {
-            adapter = new ForecastsAdapter(view.getContext(), forecasts);
-            ListView listView = (ListView) view.findViewById(R.id.listView);
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    chooser.choose(forecasts.get(position));
-                }
-            });
-        } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();//TODO:  check in other place
+        if (forecasts == null) {
+            //forecasts = new ForecastLoader(view.getContext()).getForecast(getArguments().getString("city"));
+            List<com.vladstarikov.openweather.weather.realm.Forecast> forecasts = new ForecastLoader(view.getContext()).getForecast(getArguments().getString("city"));
+            /*if (forecasts != null) {
+                adapter = new ForecastsAdapter(view.getContext(), forecasts);
+                ListView listView = (ListView) view.findViewById(R.id.listView);
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        chooser.choose(forecasts.get(position));
+                    }
+                });
+            } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();//TODO:  check in other place*/
+        }
     }
 
     public void loadForecast(String city) {
-        List<Forecast> newForecasts = new ForecastLoader(getContext()).getForecast(city);
+        /*List<Forecast> newForecasts = new ForecastLoader(getContext()).getForecast(city);
         if (newForecasts != null) {
             forecasts.clear();
             forecasts.addAll(newForecasts);
             adapter.notifyDataSetChanged();
-        }
+        }*/
     }
 }
