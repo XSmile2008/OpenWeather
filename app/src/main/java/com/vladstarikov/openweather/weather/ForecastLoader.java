@@ -20,10 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 
 /**
@@ -46,25 +44,16 @@ public class ForecastLoader {
         this.context = context;
     }
 
-    public List<Forecast> getForecast() {//TODO: remove
-        return getForecast(CITY);
+    public void loadForecasts(String city) {
+        new ForecastHttpClient().execute(city);
     }
 
-    public List<Forecast> getForecast(String city) {
-        ForecastHttpClient loader = new ForecastHttpClient();
-        try {
-            return loader.execute(city).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private class ForecastHttpClient extends AsyncTask<String, Void, List<Forecast>> {
+    private class ForecastHttpClient extends AsyncTask<String, Void, Void> {
         @Override
-        protected List<Forecast> doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             InputStream is  = null;
+            Realm realm = Realm.getInstance(context);
             List<Forecast> realmForecasts = new ArrayList<>();
             try {
                 urlConnection = (HttpURLConnection) (new URL(SOURCE + params[0])).openConnection();
@@ -95,25 +84,22 @@ public class ForecastLoader {
                         })
                         .create();
 
-                RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context).build();
-                Realm.deleteRealm(realmConfiguration);
-                Realm realm = Realm.getInstance(realmConfiguration);
-
                 //parse Json
                 JsonObject forecast5d = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
                 List<Forecast> forecasts = gson.fromJson(forecast5d.getAsJsonArray("list"), new TypeToken<List<Forecast>>(){}.getType());
 
                 //write to database
                 realm.beginTransaction();
-                realmForecasts = realm.copyToRealmOrUpdate(forecasts);//Hint: Forecast must contains @PrimaryKey
+                realm.copyToRealmOrUpdate(forecasts);//Hint: Forecast must contains @PrimaryKey
                 realm.commitTransaction();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 if (urlConnection != null) urlConnection.disconnect();
                 try {if (is != null) is.close();} catch (IOException e) {e.printStackTrace();}
+                realm.close();
             }
-            return realmForecasts;
+            return null;
         }
     }
 }

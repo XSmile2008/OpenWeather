@@ -1,7 +1,9 @@
 package com.vladstarikov.openweather.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -12,11 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.fragments.ChooserFragment;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
-import com.vladstarikov.openweather.weather.model.Forecast;
+import com.vladstarikov.openweather.weather.ForecastLoader;
+import com.vladstarikov.openweather.weather.realm.Forecast;
 
 public class MainActivity extends AppCompatActivity implements IChooser{
 
@@ -35,10 +39,8 @@ public class MainActivity extends AppCompatActivity implements IChooser{
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            Bundle args = new Bundle();
-            args.putString("city", city);
+            refreshForecasts();
             ChooserFragment chooserFragment = new ChooserFragment();
-            chooserFragment.setArguments(args);
             fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, CHOOSER_FRAGMENT).commit();
         }
         if (findViewById(R.id.containerDetail) != null) {
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements IChooser{
         int id = item.getItemId();
         switch (id) {
             case R.id.action_refresh:
-                ((ChooserFragment) getSupportFragmentManager().findFragmentByTag(CHOOSER_FRAGMENT)).loadForecast(city);
+                refreshForecasts();
                 return true;
             case R.id.action_set_city:
                 LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements IChooser{
                                 if (editText.getText().toString().length() > 2) {
                                     city = editText.getText().toString();
                                     city = String.format("%S%s", city.substring(0, 1), city.substring(1));
-                                    ((ChooserFragment) getSupportFragmentManager().findFragmentByTag(CHOOSER_FRAGMENT)).loadForecast(city);
+                                    refreshForecasts();
                                 }
                             }
                         })
@@ -118,6 +120,15 @@ public class MainActivity extends AppCompatActivity implements IChooser{
             detailsFragment.setArguments(args);
             fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment).addToBackStack("detailFragmentBS").commit();
         } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(forecast);
+    }
+
+    private void refreshForecasts() {
+        //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getApplicationContext()).build();//TODO:
+        //Realm.getInstance(this).close();
+        //Realm.deleteRealm(realmConfiguration);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
+        else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
     }
 
 }

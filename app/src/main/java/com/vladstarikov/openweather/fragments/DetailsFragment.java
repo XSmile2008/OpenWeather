@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.vladstarikov.openweather.MyDateFormatter;
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.weather.model.Forecast;
+import com.vladstarikov.openweather.weather.realm.Forecast;
 
 /**
  * Created by vladstarikov on 19.11.15.
@@ -36,16 +36,16 @@ public class DetailsFragment extends Fragment {
 
     public void update(Forecast forecast) {
         View view = getView();
-        MyDateFormatter date = new MyDateFormatter(forecast.dt_txt);
+        MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
         ((TextView) view.findViewById(R.id.textViewDateTime)).setText(date.toString());
-        ((TextView) view.findViewById(R.id.textViewDescription)).setText(String.format("%S%s", forecast.weather[0].description.substring(0, 1), forecast.weather[0].description.substring(1)));
-        ((TextView) view.findViewById(R.id.textViewTemp)).setText(String.format("%.1f \u2103 ", forecast.main.temp));
-        ((TextView) view.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f - %.1f \u2103",forecast.main.temp_min, forecast.main.temp_max));
-        ((TextView) view.findViewById(R.id.textViewPleasure)).setText(String.format("Pleasure: %.2f hpa", forecast.main.pressure));
-        ((TextView) view.findViewById(R.id.textViewHumidity)).setText(String.format("Humidity: %d %%", forecast.main.humidity));
-        if (forecast.rain != null) ((TextView) view.findViewById(R.id.textViewRain)).setText(String.format("Rain: %.2f", forecast.rain.h3));
-        ((TextView) view.findViewById(R.id.textViewClouds)).setText(String.format("Clouds: %d %%", forecast.clouds.all));
-        ((TextView) view.findViewById(R.id.textViewWind)).setText(String.format("Wind: %.2f m/s %d", forecast.wind.speed, forecast.wind.deg));
-        Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.weather[0].icon + ".png").into((ImageView) view.findViewById(R.id.imageView));
+        ((TextView) view.findViewById(R.id.textViewDescription)).setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
+        ((TextView) view.findViewById(R.id.textViewTemp)).setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
+        ((TextView) view.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f - %.1f \u2103",forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
+        ((TextView) view.findViewById(R.id.textViewPleasure)).setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
+        ((TextView) view.findViewById(R.id.textViewHumidity)).setText(String.format("Humidity: %d %%", forecast.getMain().getHumidity()));
+        if (forecast.getRain() != null) ((TextView) view.findViewById(R.id.textViewRain)).setText(String.format("Rain: %.2f", forecast.getRain().getRaininess()));
+        ((TextView) view.findViewById(R.id.textViewClouds)).setText(String.format("Clouds: %d %%", forecast.getClouds().getCloudiness()));
+        ((TextView) view.findViewById(R.id.textViewWind)).setText(String.format("Wind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
+        Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into((ImageView) view.findViewById(R.id.imageView));
     }
 }

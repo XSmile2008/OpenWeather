@@ -13,7 +13,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Forecast extends RealmObject implements Serializable{
     @PrimaryKey
-    @SerializedName("dt")       private long dateLong;
+    @SerializedName("dt")       private long dateUNIX;
     @SerializedName("main")     private Main main;
     @SerializedName("weather")  private RealmList<Weather> weather;
     @SerializedName("clouds")   private Clouds clouds;
@@ -22,12 +22,12 @@ public class Forecast extends RealmObject implements Serializable{
     //@SerializedName("sys")    private Sys sys;
     @SerializedName("dt_txt")   private String dateString;
 
-    public long getDateLong() {
-        return dateLong;
+    public long getDateUNIX() {
+        return dateUNIX;
     }
 
-    public void setDateLong(long dateLong) {
-        this.dateLong = dateLong;
+    public void setDateUNIX(long dateUNIX) {
+        this.dateUNIX = dateUNIX;
     }
 
     public Main getMain() {
