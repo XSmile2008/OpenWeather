@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,15 +21,19 @@ import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.fragments.ChooserFragment;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
 import com.vladstarikov.openweather.weather.ForecastLoader;
-import com.vladstarikov.openweather.weather.realm.Forecast;
 
-public class MainActivity extends AppCompatActivity implements IChooser{
+public class MainActivity extends AppCompatActivity implements IChooser<Long>{
 
-    private final String CHOOSER_FRAGMENT = "chooser";
-    private final String DETAILS_FRAGMENT = "details";
+    public static final String LOG_TAG = "nyan";
+
+    private static final String CHOOSER_FRAGMENT = "chooser";
+    private static final String DETAILS_FRAGMENT = "details";
+    public static final String FORECAST_ID = "forecastId";
+
+    private FragmentManager fragmentManager;
 
     private String city = "Cherkasy";
-    private Forecast selectedForecast;
+    private Long selectedForecastId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,26 +42,28 @@ public class MainActivity extends AppCompatActivity implements IChooser{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             refreshForecasts();
+            Log.i(LOG_TAG, "new ChooserFragment()");
             ChooserFragment chooserFragment = new ChooserFragment();
             fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, CHOOSER_FRAGMENT).commit();
-        } else if (savedInstanceState.containsKey("selectedForecast")) {
-            selectedForecast = (Forecast) savedInstanceState.getSerializable("selectedForecast");
+        } else if (savedInstanceState.containsKey(FORECAST_ID)) {
+            selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
         }
 
-        if (findViewById(R.id.containerDetail) != null) {
+        if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
             if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack();
             if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
+                Log.i(LOG_TAG, "new DetailsFragment()");
                 DetailsFragment detailsFragment = new DetailsFragment();
-                if (selectedForecast != null) {
+                if (selectedForecastId != null) {
                     Bundle args = new Bundle();
-                    args.putSerializable("forecast", selectedForecast);
+                    args.putSerializable(FORECAST_ID, selectedForecastId);
                     detailsFragment.setArguments(args);
                 }
                 fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, DETAILS_FRAGMENT).commit();
-            }
+            } else choose(selectedForecastId);
         }
     }
 
@@ -112,31 +119,33 @@ public class MainActivity extends AppCompatActivity implements IChooser{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("selectedForecast", selectedForecast);
+        outState.putSerializable(FORECAST_ID, selectedForecastId);
     }
 
-
-
     @Override
-    public void choose(Forecast forecast) {
-        selectedForecast = forecast;
-        FragmentManager fragmentManager = getSupportFragmentManager();
+    public void choose(Long forecastId) {
+        Log.i("nyan", "onChoose" + forecastId.toString());
+        selectedForecastId = forecastId;
         if (findViewById(R.id.containerDetail) == null) {
             Bundle args = new Bundle();
-            args.putSerializable("forecast", forecast);
+            args.putSerializable(FORECAST_ID, forecastId);
             DetailsFragment detailsFragment = new DetailsFragment();
             detailsFragment.setArguments(args);
             fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment).addToBackStack("detailFragmentBS").commit();
-        } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(forecast);
+        } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(forecastId);
     }
 
     private void refreshForecasts() {
         //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getApplicationContext()).build();//TODO:
         //Realm.getInstance(this).close();
         //Realm.deleteRealm(realmConfiguration);
+        Log.i("nyan", "onRefreshForecasts");
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
         else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+
+        ChooserFragment chooserFragment = (ChooserFragment) fragmentManager.findFragmentByTag(CHOOSER_FRAGMENT);
+        if (chooserFragment != null) chooserFragment.refresh();
     }
 
 }
