@@ -1,12 +1,16 @@
-package com.vladstarikov.openweather.wheather;
+package com.vladstarikov.openweather.weather;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.vladstarikov.openweather.wheather.model.Forecast;
+import com.google.gson.reflect.TypeToken;
+import com.vladstarikov.openweather.weather.realm.Forecast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,9 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
+import io.realm.Realm;
+import io.realm.RealmObject;
 
 /**
  * Created by vladstarikov on 19.11.15.
@@ -32,25 +37,22 @@ public class ForecastLoader {
 
     private final static String IMG_URL = "http://openweathermap.org/img/w/";
 
-    public static List<Forecast> getForecast() {//TODO: remove
-        return getForecast(CITY);
+    Context context;
+
+    public ForecastLoader(Context context) {
+        this.context = context;
     }
 
-    public static List<Forecast> getForecast(String city) {
-        ForecastHttpClient loader = new ForecastHttpClient();
-        try {
-            return loader.execute(city).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void loadForecasts(String city) {
+        new ForecastHttpClient().execute(city);
     }
 
-    private static class ForecastHttpClient extends AsyncTask<String, Void, List<Forecast>> {
+    private class ForecastHttpClient extends AsyncTask<String, Void, Void> {
         @Override
-        protected List<Forecast> doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             InputStream is  = null;
+            Realm realm = Realm.getInstance(context);
             try {
                 urlConnection = (HttpURLConnection) (new URL(SOURCE + params[0])).openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -64,22 +66,36 @@ public class ForecastLoader {
                 while ((line = br.readLine()) != null) {
                     stringBuilder.append(line);
                 }
-                is.close();
-                urlConnection.disconnect();
 
-                //parse JSON
-                Gson gson = new Gson();
+                //Configure Gson to work with Realm
+                Gson gson = new GsonBuilder()
+                        .setExclusionStrategies(new ExclusionStrategy() {
+                            @Override
+                            public boolean shouldSkipField(FieldAttributes f) {
+                                return f.getDeclaringClass().equals(RealmObject.class);
+                            }
+
+                            @Override
+                            public boolean shouldSkipClass(Class<?> clazz) {
+                                return false;
+                            }
+                        })
+                        .create();
+
+                //parse Json
                 JsonObject forecast5d = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
-                List<Forecast> forecasts = new ArrayList<>();
-                for (JsonElement element : forecast5d.getAsJsonArray("list")) {
-                    forecasts.add(gson.fromJson(element, Forecast.class));
-                }
-                return forecasts;
+                List<Forecast> forecasts = gson.fromJson(forecast5d.getAsJsonArray("list"), new TypeToken<List<Forecast>>(){}.getType());
+
+                //write to database
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(forecasts);//Hint: Forecast must contains @PrimaryKey
+                realm.commitTransaction();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 if (urlConnection != null) urlConnection.disconnect();
                 try {if (is != null) is.close();} catch (IOException e) {e.printStackTrace();}
+                realm.close();
             }
             return null;
         }

@@ -10,9 +10,9 @@ import java.util.Locale;
  */
 public class MyDateFormatter {
 
-    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
-    SimpleDateFormat myFormatDate = new SimpleDateFormat("E MMM dd", Locale.US);
-    SimpleDateFormat myFormatTime = new SimpleDateFormat("HH:mm", Locale.US);
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+    SimpleDateFormat myFormatDate = new SimpleDateFormat("E MMM dd", Locale.getDefault());
+    SimpleDateFormat myFormatTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     Date date;
 
@@ -22,6 +22,10 @@ public class MyDateFormatter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public MyDateFormatter(long input) {
+        date = new Date(input);
     }
 
     public String getTime() {

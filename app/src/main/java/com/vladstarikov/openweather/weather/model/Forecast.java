@@ -1,4 +1,4 @@
-package com.vladstarikov.openweather.wheather.model;
+package com.vladstarikov.openweather.weather.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,61 +1,78 @@
 package com.vladstarikov.openweather.adapters;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.vladstarikov.openweather.MyDateFormatter;
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.wheather.model.Forecast;
+import com.vladstarikov.openweather.activities.IChooser;
+import com.vladstarikov.openweather.weather.realm.Forecast;
 
-import java.util.List;
+import io.realm.RealmResults;
 
 /**
  * Created by vladstarikov on 20.11.15.
  */
-public class ForecastsAdapter extends BaseAdapter {
+public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.ForecastHolder> {
 
-    private Context context;
-    private List<Forecast> forecasts;
+    private IChooser chooser;
+    private RealmResults<Forecast> forecasts;
 
-    public ForecastsAdapter(Context context, List<Forecast> forecasts) {
-        this.context = context;
+    public ForecastsAdapter(IChooser chooser, RealmResults<Forecast> forecasts) {
+        super();
+        this.chooser = chooser;
         this.forecasts = forecasts;
     }
 
     @Override
-    public int getCount() {
+    public ForecastHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_forecast, parent, false);
+        return new ForecastHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ForecastHolder holder, int position) {
+        Forecast forecast = forecasts.get(position);
+        MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
+        holder.textViewDateTime.setText(String.format("%s\n%s", date.getDate(), date.getTime()));
+        holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
+        holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
+        holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
+        Picasso.with(holder.imageView.getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
+    }
+
+    @Override
+    public int getItemCount() {
         return forecasts.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return forecasts.get(position);
-    }
+    public class ForecastHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        TextView textViewDateTime;
+        TextView textViewTemp;
+        TextView textViewTempMinMax;
+        TextView textViewDescription;
+        ImageView imageView;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Forecast forecast = forecasts.get(position);
+        public ForecastHolder(View itemView) {
+            super(itemView);
+            textViewDateTime = (TextView) itemView.findViewById(R.id.textViewDateTime);
+            textViewTemp = (TextView) itemView.findViewById(R.id.textViewTemp);
+            textViewTempMinMax = (TextView) itemView.findViewById(R.id.textViewTempMinMax);
+            textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
+            imageView = (ImageView) itemView.findViewById(R.id.imageView);
 
-        MyDateFormatter date = new MyDateFormatter(forecast.dt_txt);
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.list_item_forecast, parent, false);
-        ((TextView) convertView.findViewById(R.id.textViewDateTime)).setText(String.format("%s\n%s", date.getDate(), date.getTime()));
-        ((TextView) convertView.findViewById(R.id.textViewTemp)).setText(String.format("%.1f \u2103 ", forecast.main.temp));
-        ((TextView) convertView.findViewById(R.id.textViewTempMinMax)).setText(String.format("%.1f - %.1f \u2103",forecast.main.temp_min, forecast.main.temp_max));
-        ((TextView) convertView.findViewById(R.id.textViewDescription)).setText(String.format("%S%s", forecast.weather[0].description.substring(0, 1), forecast.weather[0].description.substring(1)));
-        Picasso.with(context).load("http://openweathermap.org/img/w/" + forecast.weather[0].icon + ".png").into((ImageView) convertView.findViewById(R.id.imageView));
-        return convertView;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chooser.choose(forecasts.get(getAdapterPosition()));
+                }
+            });
+        }
     }
 }
