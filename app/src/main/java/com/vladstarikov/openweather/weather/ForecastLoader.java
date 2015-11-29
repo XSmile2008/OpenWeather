@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -54,7 +53,6 @@ public class ForecastLoader {
             HttpURLConnection urlConnection = null;
             InputStream is  = null;
             Realm realm = Realm.getInstance(context);
-            List<Forecast> realmForecasts = new ArrayList<>();
             try {
                 urlConnection = (HttpURLConnection) (new URL(SOURCE + params[0])).openConnection();
                 urlConnection.setRequestMethod("GET");

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
@@ -28,6 +28,7 @@ public class ChooserFragment extends Fragment {
 
     private IChooser chooser;
     private ForecastsAdapter adapter;
+    RealmResults<Forecast> results;
 
     @Override
     public void onAttach(Context context) {
@@ -45,18 +46,20 @@ public class ChooserFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Realm realm = Realm.getInstance((Context) chooser);
-        RealmResults<Forecast> results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
+        //realm.where(Forecast.class).findAll().clear();//TODO: delete old data
+        results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
         //realm.close();//TODO: find where close Realm
         if (results != null) {
-            adapter = new ForecastsAdapter(view.getContext(), results);
-            ListView listView = (ListView) view.findViewById(R.id.listView);
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView parent, View view, int position, long id) {
-                    chooser.choose((Forecast) adapter.getItem(position));
-                }
-            });
+            adapter = new ForecastsAdapter(chooser, results);
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager((Context) chooser));
+            recyclerView.setAdapter(adapter);
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();//TODO:  check in other place*/
+    }
+
+    public void update() {
+        Realm realm = Realm.getInstance((Context) chooser);
+        results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
+        adapter.notifyDataSetChanged();
     }
 }

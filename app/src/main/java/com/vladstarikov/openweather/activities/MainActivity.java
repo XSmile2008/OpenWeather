@@ -42,11 +42,19 @@ public class MainActivity extends AppCompatActivity implements IChooser{
             refreshForecasts();
             ChooserFragment chooserFragment = new ChooserFragment();
             fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, CHOOSER_FRAGMENT).commit();
+        } else if (savedInstanceState.containsKey("selectedForecast")) {
+            selectedForecast = (Forecast) savedInstanceState.getSerializable("selectedForecast");
         }
+
         if (findViewById(R.id.containerDetail) != null) {
             if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack();
             if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
                 DetailsFragment detailsFragment = new DetailsFragment();
+                if (selectedForecast != null) {
+                    Bundle args = new Bundle();
+                    args.putSerializable("forecast", selectedForecast);
+                    detailsFragment.setArguments(args);
+                }
                 fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, DETAILS_FRAGMENT).commit();
             }
         }
