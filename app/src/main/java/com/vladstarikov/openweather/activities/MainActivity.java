@@ -24,11 +24,11 @@ import com.vladstarikov.openweather.weather.ForecastLoader;
 
 public class MainActivity extends AppCompatActivity implements IChooser<Long>{
 
-    public static final String LOG_TAG = "nyan";
+    public static final String LOG_TAG = "neko";
 
     private static final String CHOOSER_FRAGMENT = "chooser";
     private static final String DETAILS_FRAGMENT = "details";
-    public static final String FORECAST_ID = "forecastId";
+    private static final String FORECAST_ID = "forecastId";
 
     private FragmentManager fragmentManager;
 
@@ -57,11 +57,7 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
             if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
                 Log.i(LOG_TAG, "new DetailsFragment()");
                 DetailsFragment detailsFragment = new DetailsFragment();
-                if (selectedForecastId != null) {
-                    Bundle args = new Bundle();
-                    args.putSerializable(FORECAST_ID, selectedForecastId);
-                    detailsFragment.setArguments(args);
-                }
+                detailsFragment.update(selectedForecastId);
                 fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, DETAILS_FRAGMENT).commit();
             } else choose(selectedForecastId);
         }
@@ -124,22 +120,20 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
 
     @Override
     public void choose(Long forecastId) {
-        Log.i("nyan", "onChoose" + forecastId.toString());
+        Log.i(LOG_TAG, "onChoose" + forecastId.toString());
         selectedForecastId = forecastId;
         if (findViewById(R.id.containerDetail) == null) {
-            Bundle args = new Bundle();
-            args.putSerializable(FORECAST_ID, forecastId);
             DetailsFragment detailsFragment = new DetailsFragment();
-            detailsFragment.setArguments(args);
-            fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment).addToBackStack("detailFragmentBS").commit();
-        } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(forecastId);
+            detailsFragment.update(selectedForecastId);
+            fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
+        } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
     }
 
     private void refreshForecasts() {
         //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getApplicationContext()).build();//TODO:
         //Realm.getInstance(this).close();
         //Realm.deleteRealm(realmConfiguration);
-        Log.i("nyan", "onRefreshForecasts");
+        Log.i(LOG_TAG, "onRefreshForecasts");
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
         else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();

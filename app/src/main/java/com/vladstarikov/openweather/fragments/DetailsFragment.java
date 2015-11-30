@@ -1,5 +1,6 @@
 package com.vladstarikov.openweather.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,33 +28,32 @@ public class DetailsFragment extends Fragment {
     private Realm realm;
     private Long forecastId;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        realm = Realm.getInstance(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, "DetailsFragment.CreateView()");
+        Log.i(MainActivity.LOG_TAG, getTag() + ".CreateView()");
         return inflater.inflate(R.layout.fragment_details, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (holder == null) holder = new ForecastHolder(getView());
-        realm = Realm.getInstance(getContext());
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(MainActivity.FORECAST_ID)) {
-            forecastId = bundle.getLong(MainActivity.FORECAST_ID);
-        }
-        if (forecastId != null) {
-            updateView();
-        }
-        Log.i(MainActivity.LOG_TAG, "DetailsFragment.onViewCreated()");
+        if (holder == null) holder = new ForecastHolder(view);
+        if (forecastId != null) updateView();
+        Log.i(MainActivity.LOG_TAG, getTag() + ".onViewCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         realm.close();
-        Log.i(MainActivity.LOG_TAG, "DetailsFragment.onDestroy()");
+        Log.i(MainActivity.LOG_TAG, getTag() + ".onDestroy()");
     }
 
     public void update(Long forecastId) {
@@ -61,19 +61,21 @@ public class DetailsFragment extends Fragment {
         if (this.isVisible()) updateView();
     }
 
-    public void updateView() {
+    private void updateView() {
         Forecast forecast = realm.where(Forecast.class).equalTo("dateUNIX", this.forecastId).findFirst();
-        MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
-        holder.textViewDateTime.setText(date.toString());
-        holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
-        holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
-        holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103",forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
-        holder.textViewPleasure.setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
-        holder.textViewHumidity.setText(String.format("Humidity: %d %%", forecast.getMain().getHumidity()));
-        if (forecast.getRain() != null) holder.textViewRain.setText(String.format("Rain: %.2f", forecast.getRain().getRaininess()));
-        holder.textViewClouds.setText(String.format("Clouds: %d %%", forecast.getClouds().getCloudiness()));
-        holder.textViewWind.setText(String.format("Wind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
-        Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
+        if (forecast != null) {
+            MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
+            holder.textViewDateTime.setText(date.toString());
+            holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
+            holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
+            holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
+            holder.textViewPleasure.setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
+            holder.textViewHumidity.setText(String.format("Humidity: %d %%", forecast.getMain().getHumidity()));
+            if (forecast.getRain() != null) holder.textViewRain.setText(String.format("Rain: %.2f", forecast.getRain().getRaininess()));
+            holder.textViewClouds.setText(String.format("Clouds: %d %%", forecast.getClouds().getCloudiness()));
+            holder.textViewWind.setText(String.format("Wind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
+            Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
+        }
     }
 
     private class ForecastHolder {

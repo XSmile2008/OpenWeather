@@ -37,34 +37,35 @@ public class ChooserFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         chooser  = (IChooser<Long>) context;
+        realm = Realm.getInstance((Context) chooser);
+        Log.i(MainActivity.LOG_TAG, getTag() + ".onAttach()");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, "ChooserFragment.onCreateView()");
+        Log.i(MainActivity.LOG_TAG, getTag() + ".onCreateView()");
         return inflater.inflate(R.layout.fragment_chooser, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        realm = Realm.getInstance((Context) chooser);
         results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
         if (results != null) {
             adapter = new ForecastsAdapter(chooser, results);
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(new LinearLayoutManager((Context) chooser));
             recyclerView.setAdapter(adapter);
-        } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();//TODO:  check in other place*/
-        Log.i(MainActivity.LOG_TAG, "ChooserFragment.onViewCreated()");
+        } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+        Log.i(MainActivity.LOG_TAG, getTag() + ".onViewCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(MainActivity.LOG_TAG, "ChooserFragment.onDestroy()");
         realm.close();
+        Log.i(MainActivity.LOG_TAG, getTag() + ".onDestroy()");
     }
 
     public void refresh() {
