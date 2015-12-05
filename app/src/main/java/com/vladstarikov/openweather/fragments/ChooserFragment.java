@@ -38,13 +38,13 @@ public class ChooserFragment extends Fragment {
         super.onAttach(context);
         chooser  = (IChooser<Long>) context;
         realm = Realm.getInstance((Context) chooser);
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onAttach()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".onAttach()");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onCreateView()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".onCreateView()");
         return inflater.inflate(R.layout.fragment_chooser, container, false);
     }
 
@@ -58,14 +58,14 @@ public class ChooserFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager((Context) chooser));
             recyclerView.setAdapter(adapter);
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onViewCreated()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".onViewCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         realm.close();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onDestroy()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".onDestroy()");
     }
 
     public void refresh() {

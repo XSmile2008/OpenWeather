@@ -6,10 +6,10 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
-
-    <FrameLayout
+    
+    <fragment class="com.vladstarikov.openweather.fragments.ChooserFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/containerChooser"/>
+        android:id="@+id/fragmentChooser"/>
 
 </LinearLayout>

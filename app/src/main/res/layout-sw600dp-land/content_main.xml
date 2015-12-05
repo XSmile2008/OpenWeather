@@ -7,16 +7,16 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
-    <FrameLayout
+    <fragment class="com.vladstarikov.openweather.fragments.ChooserFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:id="@+id/fragmentChooser"/>
+
+    <fragment class="com.vladstarikov.openweather.fragments.DetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:id="@+id/containerChooser"/>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/containerDetails"/>
+        android:id="@+id/fragmentDetails"/>
     
 </LinearLayout>

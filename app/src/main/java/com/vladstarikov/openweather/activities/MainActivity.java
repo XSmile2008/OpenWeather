@@ -26,12 +26,9 @@ import com.vladstarikov.openweather.weather.ForecastLoader;
 public class MainActivity extends AppCompatActivity implements IChooser<Long>{
 
     public static final String LOG_TAG = "neko";
-
-    private static final String CHOOSER_FRAGMENT = "chooser";
-    public static final String DETAILS_FRAGMENT = "details";
     public static final String FORECAST_ID = "forecastId";
 
-    private FragmentManager fragmentManager;
+    FragmentManager fragmentManager;
 
     private String city = "Cherkasy";
     private Long selectedForecastId;
@@ -44,23 +41,12 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        if (savedInstanceState == null) {
-            refreshForecasts();
-            Log.i(LOG_TAG, "new ChooserFragment()");
-            ChooserFragment chooserFragment = new ChooserFragment();
-            fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, CHOOSER_FRAGMENT).commit();
-        } else if (savedInstanceState.containsKey(FORECAST_ID)) {
-            selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
-        }
 
-        if (findViewById(R.id.containerDetails) != null) {//if Tablet mode
-            if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
-                Log.i(LOG_TAG, "new DetailsFragment()");
-                DetailsFragment detailsFragment = new DetailsFragment();
-                detailsFragment.update(selectedForecastId);
-                fragmentManager.beginTransaction().add(R.id.containerDetails, detailsFragment, DETAILS_FRAGMENT).commit();
-            } else choose(selectedForecastId);
-        }
+        if (savedInstanceState == null) refreshForecasts();
+        else if (savedInstanceState.containsKey(FORECAST_ID)) selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
+
+        DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentDetails);
+        if (detailsFragment != null) detailsFragment.update(selectedForecastId);
     }
 
     @Override
@@ -122,8 +108,9 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
     public void choose(Long forecastId) {
         Log.i(LOG_TAG, "onChoose" + forecastId.toString());
         selectedForecastId = forecastId;
-        if (findViewById(R.id.containerDetails) == null) startActivity(new Intent(this, DetailsActivity.class).putExtra(FORECAST_ID, selectedForecastId));
-        else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
+        DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentDetails);
+        if (detailsFragment == null) startActivity(new Intent(this, DetailsActivity.class).putExtra(FORECAST_ID, selectedForecastId));
+        else detailsFragment.update(selectedForecastId);
     }
 
     private void refreshForecasts() {
@@ -135,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
         if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
         else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
 
-        ChooserFragment chooserFragment = (ChooserFragment) fragmentManager.findFragmentByTag(CHOOSER_FRAGMENT);
+        ChooserFragment chooserFragment = (ChooserFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentChooser);
         if (chooserFragment != null) chooserFragment.refresh();
     }
 

@@ -37,7 +37,7 @@ public class DetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, getTag() + ".CreateView()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".CreateView()");
         return inflater.inflate(R.layout.fragment_details, container, false);
     }
 
@@ -46,14 +46,14 @@ public class DetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (holder == null) holder = new ForecastHolder(view);
         if (forecastId != null) updateView();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onViewCreated()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".onViewCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         realm.close();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onDestroy()");
+        Log.i(MainActivity.LOG_TAG, getId() + ".onDestroy()");
     }
 
     public void update(Long forecastId) {

@@ -7,9 +7,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_details" tools:context=".DetailsActivity">
 
-    <FrameLayout
+    <fragment class="com.vladstarikov.openweather.fragments.DetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/containerDetails"/>
-
+        android:id="@+id/fragmentDetails"/>
 </LinearLayout>
