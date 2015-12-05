@@ -2,6 +2,7 @@ package com.vladstarikov.openweather.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -27,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
     public static final String LOG_TAG = "neko";
 
     private static final String CHOOSER_FRAGMENT = "chooser";
-    private static final String DETAILS_FRAGMENT = "details";
-    private static final String FORECAST_ID = "forecastId";
+    public static final String DETAILS_FRAGMENT = "details";
+    public static final String FORECAST_ID = "forecastId";
 
     private FragmentManager fragmentManager;
 
@@ -52,13 +53,12 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
             selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
         }
 
-        if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
-            if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack();
+        if (findViewById(R.id.containerDetails) != null) {//if Tablet mode
             if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
                 Log.i(LOG_TAG, "new DetailsFragment()");
                 DetailsFragment detailsFragment = new DetailsFragment();
                 detailsFragment.update(selectedForecastId);
-                fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, DETAILS_FRAGMENT).commit();
+                fragmentManager.beginTransaction().add(R.id.containerDetails, detailsFragment, DETAILS_FRAGMENT).commit();
             } else choose(selectedForecastId);
         }
     }
@@ -122,11 +122,8 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
     public void choose(Long forecastId) {
         Log.i(LOG_TAG, "onChoose" + forecastId.toString());
         selectedForecastId = forecastId;
-        if (findViewById(R.id.containerDetail) == null) {
-            DetailsFragment detailsFragment = new DetailsFragment();
-            detailsFragment.update(selectedForecastId);
-            fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
-        } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
+        if (findViewById(R.id.containerDetails) == null) startActivity(new Intent(this, DetailsActivity.class).putExtra(FORECAST_ID, selectedForecastId));
+        else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
     }
 
     private void refreshForecasts() {
