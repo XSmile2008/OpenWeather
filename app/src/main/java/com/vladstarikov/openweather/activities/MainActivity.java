@@ -20,9 +20,10 @@ import android.widget.Toast;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.fragments.ChooserFragment;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
+import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.weather.ForecastLoader;
 
-public class MainActivity extends AppCompatActivity implements IChooser<Long>{
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
     public static final String LOG_TAG = "neko";
 
@@ -53,13 +54,16 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
         }
 
         if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
-            if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack();
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                //fragmentManager.popBackStack();
+                onBackPressed();
+            }
             if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
                 Log.i(LOG_TAG, "new DetailsFragment()");
                 DetailsFragment detailsFragment = new DetailsFragment();
                 detailsFragment.update(selectedForecastId);
                 fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, DETAILS_FRAGMENT).commit();
-            } else choose(selectedForecastId);
+            } else onItemSelected(selectedForecastId);
         }
     }
 
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case android.R.id.home:
+                onBackPressed();
             case R.id.action_refresh:
                 refreshForecasts();
                 return true;
@@ -119,10 +125,11 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
     }
 
     @Override
-    public void choose(Long forecastId) {
-        Log.i(LOG_TAG, "onChoose" + forecastId.toString());
+    public void onItemSelected(Long forecastId) {
+        Log.i(LOG_TAG, "onItemSelected" + forecastId.toString());
         selectedForecastId = forecastId;
         if (findViewById(R.id.containerDetail) == null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             DetailsFragment detailsFragment = new DetailsFragment();
             detailsFragment.update(selectedForecastId);
             fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
@@ -142,4 +149,9 @@ public class MainActivity extends AppCompatActivity implements IChooser<Long>{
         if (chooserFragment != null) chooserFragment.refresh();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
 }

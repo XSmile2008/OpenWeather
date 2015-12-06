@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.vladstarikov.openweather.MyDateFormatter;
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.activities.IChooser;
+import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
 import io.realm.RealmResults;
@@ -20,10 +20,10 @@ import io.realm.RealmResults;
  */
 public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.ForecastHolder> {
 
-    private IChooser<Long> chooser;
+    private OnItemSelectedListener<Long> chooser;
     private RealmResults<Forecast> forecasts;
 
-    public ForecastsAdapter(IChooser<Long> chooser, RealmResults<Forecast> forecasts) {
+    public ForecastsAdapter(OnItemSelectedListener<Long> chooser, RealmResults<Forecast> forecasts) {
         super();
         this.chooser = chooser;
         this.forecasts = forecasts;
@@ -70,7 +70,7 @@ public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.Fore
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chooser.choose(forecasts.get(getAdapterPosition()).getDateUNIX());
+                    chooser.onItemSelected(forecasts.get(getAdapterPosition()).getDateUNIX());
                 }
             });
         }

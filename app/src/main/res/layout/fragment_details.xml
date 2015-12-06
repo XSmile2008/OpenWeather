@@ -1,75 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_margin="@dimen/activity_margin"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:gravity="center_horizontal">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:id="@+id/textViewDateTime"/>
+        android:id="@+id/textViewDateTime"
+        style="@style/MediumText" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:id="@+id/textViewDescription"/>
+        android:id="@+id/textViewDescription"
+        style="@style/MediumText" />
 
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_row="0"
             android:layout_column="0"
-            android:contentDescription="weather icon"
-            android:id="@+id/imageView"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_row="0"
-            android:layout_column="1"
-            android:textSize="28sp"
-            android:id="@+id/textViewTemp"/>
+            android:contentDescription="weather icon" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
+            android:id="@+id/textViewTemp"
+            style="@style/LargeText"
+            android:layout_column="1"
+            android:layout_row="0" />
+
+        <TextView
+            android:id="@+id/textViewTempMinMax"
+            style="@style/SmallText"
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/textViewTempMinMax"/>
+            android:layout_row="1" />
 
     </GridLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewPleasure"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewHumidity"/>
+        <TextView
+            android:id="@+id/textViewPleasure"
+            style="@style/SmallText" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewRain"/>
+        <TextView
+            android:id="@+id/textViewHumidity"
+            style="@style/SmallText" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewClouds"/>
+        <TextView
+            android:id="@+id/textViewRain"
+            style="@style/SmallText" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewWind"/>
+        <TextView
+            android:id="@+id/textViewClouds"
+            style="@style/SmallText" />
+
+        <TextView
+            android:id="@+id/textViewWind"
+            style="@style/SmallText" />
+
+    </LinearLayout>
 
 </LinearLayout>

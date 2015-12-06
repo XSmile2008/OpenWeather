@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.activities.IChooser;
+import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.activities.MainActivity;
 import com.vladstarikov.openweather.adapters.ForecastsAdapter;
 import com.vladstarikov.openweather.weather.realm.Forecast;
@@ -28,7 +28,7 @@ import io.realm.RealmResults;
  */
 public class ChooserFragment extends Fragment {
 
-    private IChooser<Long> chooser;
+    private OnItemSelectedListener<Long> chooser;
     private ForecastsAdapter adapter;
     private Realm realm;
     private RealmResults<Forecast> results;
@@ -36,7 +36,7 @@ public class ChooserFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        chooser  = (IChooser<Long>) context;
+        chooser  = (OnItemSelectedListener<Long>) context;
         realm = Realm.getInstance((Context) chooser);
         Log.i(MainActivity.LOG_TAG, getTag() + ".onAttach()");
     }
