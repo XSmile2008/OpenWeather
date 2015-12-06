@@ -26,7 +26,7 @@ import io.realm.RealmResults;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class ChooserFragment extends Fragment {
+public class SelectorFragment extends Fragment {
 
     private OnItemSelectedListener<Long> chooser;
     private ForecastsAdapter adapter;
