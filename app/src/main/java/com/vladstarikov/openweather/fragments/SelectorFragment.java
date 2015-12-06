@@ -45,7 +45,7 @@ public class SelectorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(MainActivity.LOG_TAG, getTag() + ".onCreateView()");
-        return inflater.inflate(R.layout.fragment_chooser, container, false);
+        return inflater.inflate(R.layout.fragment_selector, container, false);
     }
 
     @Override

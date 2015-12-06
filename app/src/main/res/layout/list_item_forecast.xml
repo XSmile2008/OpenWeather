@@ -18,34 +18,49 @@
 
         <TextView
             android:id="@+id/textViewDateTime"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content" />
+            style="@style/SmallText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:minWidth="80dp" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="weather icon" />
 
-        <LinearLayout
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:layout_rowSpan="2"
+                android:layout_gravity="center"
+                android:contentDescription="weather icon" />
 
             <TextView
                 android:id="@+id/textViewTemp"
                 style="@style/MediumText"
-                android:textAlignment="center" />
+                android:layout_column="1"
+                android:layout_row="0"
+                android:layout_gravity="center_horizontal" />
 
             <TextView
                 android:id="@+id/textViewTempMinMax"
                 style="@style/SmallText"
-                android:textAlignment="center" />
-        </LinearLayout>
+                android:layout_column="1"
+                android:layout_row="1"
+                android:layout_gravity="center_horizontal"/>
+        </GridLayout>
 
         <TextView
             android:id="@+id/textViewDescription"
-            style="@style/SmallText" />
+            style="@style/SmallText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

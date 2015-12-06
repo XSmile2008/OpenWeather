@@ -39,7 +39,7 @@ public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.Fore
     public void onBindViewHolder(ForecastHolder holder, int position) {
         Forecast forecast = forecasts.get(position);
         MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
-        holder.textViewDateTime.setText(String.format("%s\n%s", date.getDate(), date.getTime()));
+        holder.textViewDateTime.setText(String.format("%s %s", date.getDate(), date.getTime()));
         holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
         holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
         holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));

@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.fragments.ChooserFragment;
+import com.vladstarikov.openweather.fragments.SelectorFragment;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.weather.ForecastLoader;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private static final String FORECAST_ID = "forecastId";
 
     private FragmentManager fragmentManager;
+    private ActionBar actionBar;
 
     private String city = "Cherkasy";
     private Long selectedForecastId;
@@ -40,24 +42,22 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        actionBar = getSupportActionBar();
+        actionBar.setIcon(R.mipmap.ic_launcher);
 
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             refreshForecasts();
-            Log.i(LOG_TAG, "new ChooserFragment()");
-            ChooserFragment chooserFragment = new ChooserFragment();
-            fragmentManager.beginTransaction().add(R.id.containerChooser, chooserFragment, CHOOSER_FRAGMENT).commit();
+            Log.i(LOG_TAG, "new SelectorFragment()");
+            SelectorFragment selectorFragment = new SelectorFragment();
+            fragmentManager.beginTransaction().add(R.id.containerSelector, selectorFragment, CHOOSER_FRAGMENT).commit();
         } else if (savedInstanceState.containsKey(FORECAST_ID)) {
             selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
         }
 
         if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
-            if (fragmentManager.getBackStackEntryCount() > 0) {
-                //fragmentManager.popBackStack();
-                onBackPressed();
-            }
+            if (fragmentManager.getBackStackEntryCount() > 0) onBackPressed();
             if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
                 Log.i(LOG_TAG, "new DetailsFragment()");
                 DetailsFragment detailsFragment = new DetailsFragment();
@@ -129,10 +129,11 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         Log.i(LOG_TAG, "onItemSelected" + forecastId.toString());
         selectedForecastId = forecastId;
         if (findViewById(R.id.containerDetail) == null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setIcon(null);
             DetailsFragment detailsFragment = new DetailsFragment();
             detailsFragment.update(selectedForecastId);
-            fragmentManager.beginTransaction().replace(R.id.containerChooser, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
+            fragmentManager.beginTransaction().replace(R.id.containerSelector, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
         } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
     }
 
@@ -145,13 +146,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
         else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
 
-        ChooserFragment chooserFragment = (ChooserFragment) fragmentManager.findFragmentByTag(CHOOSER_FRAGMENT);
-        if (chooserFragment != null) chooserFragment.refresh();
+        SelectorFragment selectorFragment = (SelectorFragment) fragmentManager.findFragmentByTag(CHOOSER_FRAGMENT);
+        if (selectorFragment != null) selectorFragment.refresh();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setIcon(R.mipmap.ic_launcher);
     }
 }
