@@ -3,8 +3,6 @@ package com.vladstarikov.openweather.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +76,10 @@ public class DetailsFragment extends DebugFragment {
             holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
             holder.textViewPleasure.setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
             holder.textViewHumidity.setText(String.format("Humidity: %d %%", forecast.getMain().getHumidity()));
-            if (forecast.getRain() != null) holder.textViewRain.setText(String.format("Rain: %.2f", forecast.getRain().getRaininess()));
+            if (forecast.getRain() != null) {
+                holder.textViewRain.setText(String.format("Rain: %.2f", forecast.getRain().getRainiest()));
+                holder.textViewRain.setVisibility(View.VISIBLE);
+            } else holder.textViewRain.setVisibility(View.INVISIBLE);
             holder.textViewClouds.setText(String.format("Clouds: %d %%", forecast.getClouds().getCloudiness()));
             holder.textViewWind.setText(String.format("Wind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
             Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);

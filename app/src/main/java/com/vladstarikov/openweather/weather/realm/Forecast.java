@@ -19,6 +19,7 @@ public class Forecast extends RealmObject implements Serializable{
     @SerializedName("clouds")   private Clouds clouds;
     @SerializedName("wind")     private Wind wind;
     @SerializedName("rain")     private Rain rain;
+    @SerializedName("snow")     private Snow snow;
     //@SerializedName("sys")    private Sys sys;
     @SerializedName("dt_txt")   private String dateString;
 
@@ -76,5 +77,13 @@ public class Forecast extends RealmObject implements Serializable{
 
     public void setDateString(String dateString) {
         this.dateString = dateString;
+    }
+
+    public Snow getSnow() {
+        return snow;
+    }
+
+    public void setSnow(Snow snow) {
+        this.snow = snow;
     }
 }

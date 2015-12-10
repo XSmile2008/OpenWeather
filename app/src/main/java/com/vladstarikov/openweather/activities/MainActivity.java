@@ -24,19 +24,19 @@ import com.vladstarikov.openweather.fragments.DetailsFragment;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.weather.ForecastLoader;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
     public static final String LOG_TAG = "neko";
-
-    private static final String CHOOSER_FRAGMENT = "chooser";//TODO: delete Tags use containers Id's
-    private static final String DETAILS_FRAGMENT = "details";
     public static final String FORECAST_ID = "forecastId";
 
     private FragmentManager fragmentManager;
     private ActionBar actionBar;
 
     private String city = "Cherkasy";
-    private Long selectedForecastId;
+    private Long selectedForecastId = Long.MIN_VALUE;//TODO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +49,22 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             refreshForecasts();
-            Log.i(LOG_TAG, "new SelectorFragment()");
             SelectorFragment selectorFragment = new SelectorFragment();
-            fragmentManager.beginTransaction().add(R.id.containerSelector, selectorFragment, CHOOSER_FRAGMENT).commit();
+            fragmentManager.beginTransaction().add(R.id.containerSelector, selectorFragment).commit();
         } else if (savedInstanceState.containsKey(FORECAST_ID)) {
             selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
         }
 
         if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
             if (fragmentManager.getBackStackEntryCount() > 0) onBackPressed();
-            if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT) == null) {
-                Log.i(LOG_TAG, "new DetailsFragment()");
-                DetailsFragment detailsFragment = new DetailsFragment();
-                detailsFragment.update(selectedForecastId);
-                fragmentManager.beginTransaction().add(R.id.containerDetail, detailsFragment, DETAILS_FRAGMENT).commit();
+            if (fragmentManager.findFragmentById(R.id.containerDetail) == null) {
+                fragmentManager.beginTransaction().add(R.id.containerDetail, DetailsFragment.newInstance(selectedForecastId)).commit();
             } else onItemSelected(selectedForecastId);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 final EditText editText = (EditText) promptView.findViewById(R.id.editText);
                 editText.setHint(city);
 
-                AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(MainActivity.this)
                         .setView(promptView)
                         .setCancelable(true)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -105,8 +100,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
-                        }).create();
-                alert.show();
+                        }).create().show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -133,11 +127,11 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             actionBar.setIcon(null);
             DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedForecastId);
             fragmentManager.beginTransaction().replace(R.id.containerSelector, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
-        } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
+        } else ((DetailsFragment) fragmentManager.findFragmentById(R.id.containerDetail)).update(selectedForecastId);
     }
 
     private void refreshForecasts() {
-        //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getApplicationContext()).build();//TODO:
+        //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getApplicationContext()).build();//TODO: catch exception when change realm and delete database
         //Realm.getInstance(this).close();
         //Realm.deleteRealm(realmConfiguration);
         Log.i(LOG_TAG, "onRefreshForecasts");
@@ -145,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
         else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
 
-        SelectorFragment selectorFragment = (SelectorFragment) fragmentManager.findFragmentByTag(CHOOSER_FRAGMENT);
+        SelectorFragment selectorFragment = (SelectorFragment) fragmentManager.findFragmentById(R.id.containerSelector);
         if (selectorFragment != null) selectorFragment.refresh();
     }
 
