@@ -28,9 +28,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     public static final String LOG_TAG = "neko";
 
-    private static final String CHOOSER_FRAGMENT = "chooser";
+    private static final String CHOOSER_FRAGMENT = "chooser";//TODO: delete Tags use containers Id's
     private static final String DETAILS_FRAGMENT = "details";
-    private static final String FORECAST_ID = "forecastId";
+    public static final String FORECAST_ID = "forecastId";
 
     private FragmentManager fragmentManager;
     private ActionBar actionBar;
@@ -131,8 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if (findViewById(R.id.containerDetail) == null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setIcon(null);
-            DetailsFragment detailsFragment = new DetailsFragment();
-            detailsFragment.update(selectedForecastId);
+            DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedForecastId);
             fragmentManager.beginTransaction().replace(R.id.containerSelector, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
         } else ((DetailsFragment) fragmentManager.findFragmentByTag(DETAILS_FRAGMENT)).update(selectedForecastId);
     }

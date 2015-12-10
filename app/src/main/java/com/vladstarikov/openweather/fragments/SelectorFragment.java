@@ -26,7 +26,7 @@ import io.realm.RealmResults;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class SelectorFragment extends Fragment {
+public class SelectorFragment extends DebugFragment {
 
     private OnItemSelectedListener<Long> chooser;
     private ForecastsAdapter adapter;
@@ -38,13 +38,11 @@ public class SelectorFragment extends Fragment {
         super.onAttach(context);
         chooser  = (OnItemSelectedListener<Long>) context;
         realm = Realm.getInstance((Context) chooser);
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onAttach()");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onCreateView()");
         return inflater.inflate(R.layout.fragment_selector, container, false);
     }
 
@@ -58,18 +56,16 @@ public class SelectorFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager((Context) chooser));
             recyclerView.setAdapter(adapter);
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onViewCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         realm.close();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onDestroy()");
     }
 
     public void refresh() {
-        results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
+        results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
         adapter.notifyDataSetChanged();
     }
 }

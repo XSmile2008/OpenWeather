@@ -22,11 +22,19 @@ import io.realm.Realm;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends DebugFragment {
 
     private ForecastHolder holder;
     private Realm realm;
     private Long forecastId;
+
+    public static DetailsFragment newInstance(long id) {//TODO: make this
+        Bundle args = new Bundle();
+        args.putLong(MainActivity.FORECAST_ID, id);
+        DetailsFragment detailsFragment = new DetailsFragment();
+        detailsFragment.setArguments(args);
+        return detailsFragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -37,23 +45,22 @@ public class DetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, getTag() + ".CreateView()");
         return inflater.inflate(R.layout.fragment_details, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (holder == null) holder = new ForecastHolder(view);
+        if (holder == null) holder = new ForecastHolder(view);//TODO: move to onCreateView
+        Bundle args = getArguments();
+        forecastId = args.getLong(MainActivity.FORECAST_ID);
         if (forecastId != null) updateView();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onViewCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         realm.close();
-        Log.i(MainActivity.LOG_TAG, getTag() + ".onDestroy()");
     }
 
     public void update(Long forecastId) {
