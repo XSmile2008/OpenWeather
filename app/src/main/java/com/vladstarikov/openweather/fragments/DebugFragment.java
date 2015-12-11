@@ -1,5 +1,6 @@
 package com.vladstarikov.openweather.fragments;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +15,13 @@ import com.vladstarikov.openweather.activities.MainActivity;
 /**
  * Created by Starikov on 10.12.15.
  */
-public class DebugFragment extends Fragment {
+public abstract class DebugFragment extends Fragment {
+
+    @Override
+    public void onAttach(Context context) {
+        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onAttach()");
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

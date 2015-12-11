@@ -3,10 +3,8 @@ package com.vladstarikov.openweather.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
-import com.vladstarikov.openweather.activities.MainActivity;
 import com.vladstarikov.openweather.adapters.ForecastsAdapter;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
@@ -26,18 +23,15 @@ import io.realm.RealmResults;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class SelectorFragment extends DebugFragment {
+public class SelectorFragment extends RealmFragment {
 
-    private OnItemSelectedListener<Long> chooser;
+    private OnItemSelectedListener<Long> selector;
     private ForecastsAdapter adapter;
-    private Realm realm;
-    private RealmResults<Forecast> results;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        chooser  = (OnItemSelectedListener<Long>) context;
-        realm = Realm.getInstance((Context) chooser);
+        selector = (OnItemSelectedListener<Long>) context;
     }
 
     @Nullable
@@ -49,23 +43,17 @@ public class SelectorFragment extends DebugFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
+        RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
         if (results != null) {
-            adapter = new ForecastsAdapter(chooser, results);
+            adapter = new ForecastsAdapter(selector, results);
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-            recyclerView.setLayoutManager(new LinearLayoutManager((Context) chooser));
+            recyclerView.setLayoutManager(new LinearLayoutManager((Context) selector));
             recyclerView.setAdapter(adapter);
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
-    }
-
     public void refresh() {
-        results = realm.where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
-        adapter.notifyDataSetChanged();
+        RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
+        if (results != null) adapter.setForecasts(results);
     }
 }

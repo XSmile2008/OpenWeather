@@ -20,13 +20,18 @@ import io.realm.RealmResults;
  */
 public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.ForecastHolder> {
 
-    private OnItemSelectedListener<Long> chooser;
+    private OnItemSelectedListener<Long> selector;
     private RealmResults<Forecast> forecasts;
 
-    public ForecastsAdapter(OnItemSelectedListener<Long> chooser, RealmResults<Forecast> forecasts) {
+    public ForecastsAdapter(OnItemSelectedListener<Long> selector, RealmResults<Forecast> forecasts) {
         super();
-        this.chooser = chooser;
+        this.selector = selector;
         this.forecasts = forecasts;
+    }
+
+    public void setForecasts(RealmResults<Forecast> forecasts) {
+        this.forecasts = forecasts;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -70,7 +75,7 @@ public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.Fore
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chooser.onItemSelected(forecasts.get(getAdapterPosition()).getDateUNIX());
+                    selector.onItemSelected(forecasts.get(getAdapterPosition()).getDateUNIX());
                 }
             });
         }

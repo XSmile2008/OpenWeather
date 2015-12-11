@@ -20,10 +20,9 @@ import io.realm.Realm;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class DetailsFragment extends DebugFragment {
+public class DetailsFragment extends RealmFragment {
 
     private ForecastHolder holder;
-    private Realm realm;
     private Long forecastId;
 
     public static DetailsFragment newInstance(long id) {//TODO: make this
@@ -32,12 +31,6 @@ public class DetailsFragment extends DebugFragment {
         DetailsFragment detailsFragment = new DetailsFragment();
         detailsFragment.setArguments(args);
         return detailsFragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        realm = Realm.getInstance(context);
     }
 
     @Nullable
@@ -55,19 +48,13 @@ public class DetailsFragment extends DebugFragment {
         if (forecastId != null) updateView();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
-    }
-
     public void update(Long forecastId) {
         this.forecastId = forecastId;
         if (this.isVisible()) updateView();
     }
 
     private void updateView() {
-        Forecast forecast = realm.where(Forecast.class).equalTo("dateUNIX", this.forecastId).findFirst();
+        Forecast forecast = getRealm().where(Forecast.class).equalTo("dateUNIX", this.forecastId).findFirst();
         if (forecast != null) {
             MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
             holder.textViewDateTime.setText(date.toString());
