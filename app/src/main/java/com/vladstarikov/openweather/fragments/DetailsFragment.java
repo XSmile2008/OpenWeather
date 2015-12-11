@@ -74,14 +74,12 @@ public class DetailsFragment extends DebugFragment {
             holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
             holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
             holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
-            holder.textViewPleasure.setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
-            holder.textViewHumidity.setText(String.format("Humidity: %d %%", forecast.getMain().getHumidity()));
-            if (forecast.getRain() != null) {
-                holder.textViewRain.setText(String.format("Rain: %.2f", forecast.getRain().getRainiest()));
-                holder.textViewRain.setVisibility(View.VISIBLE);
-            } else holder.textViewRain.setVisibility(View.INVISIBLE);
-            holder.textViewClouds.setText(String.format("Clouds: %d %%", forecast.getClouds().getCloudiness()));
-            holder.textViewWind.setText(String.format("Wind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
+            holder.textViewDetails.setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
+            holder.textViewDetails.append(String.format("\nHumidity: %d %%", forecast.getMain().getHumidity()));
+            if (forecast.getRain() != null && forecast.getRain().getRainiest() != 0) holder.textViewDetails.append(String.format("\nRain: %.3f", forecast.getRain().getRainiest()));
+            if (forecast.getSnow() != null && forecast.getSnow().getSnowiness() != 0) holder.textViewDetails.append(String.format("\nSnow: %.3f", forecast.getSnow().getSnowiness()));
+            holder.textViewDetails.append(String.format("\nClouds: %d %%", forecast.getClouds().getCloudiness()));
+            holder.textViewDetails.append(String.format("\nWind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
             Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
         }
     }
@@ -92,11 +90,7 @@ public class DetailsFragment extends DebugFragment {
         TextView textViewTemp;
         TextView textViewTempMinMax;
         TextView textViewDescription;
-        TextView textViewPleasure;
-        TextView textViewHumidity;
-        TextView textViewRain;
-        TextView textViewClouds;
-        TextView textViewWind;
+        TextView textViewDetails;
         ImageView imageView;
 
         private ForecastHolder(View itemView) {
@@ -104,11 +98,7 @@ public class DetailsFragment extends DebugFragment {
             textViewTemp = (TextView) itemView.findViewById(R.id.textViewTemp);
             textViewTempMinMax = (TextView) itemView.findViewById(R.id.textViewTempMinMax);
             textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
-            textViewPleasure = (TextView) itemView.findViewById(R.id.textViewPleasure);
-            textViewHumidity = (TextView) itemView.findViewById(R.id.textViewHumidity);
-            textViewRain = (TextView) itemView.findViewById(R.id.textViewRain);
-            textViewClouds = (TextView) itemView.findViewById(R.id.textViewClouds);
-            textViewWind = (TextView) itemView.findViewById(R.id.textViewWind);
+            textViewDetails = (TextView) itemView.findViewById(R.id.textViewDetails);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
         }
     }

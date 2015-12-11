@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 fragmentManager.beginTransaction().add(R.id.containerDetail, DetailsFragment.newInstance(selectedForecastId)).commit();
             } else onItemSelected(selectedForecastId);
         }
+        if (fragmentManager.getFragments() != null) Log.e(LOG_TAG, fragmentManager.getFragments().toString());
     }
 
     @Override
@@ -125,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if (findViewById(R.id.containerDetail) == null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setIcon(null);
-            DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedForecastId);
-            fragmentManager.beginTransaction().replace(R.id.containerSelector, detailsFragment, "detailsBS").addToBackStack("detailsBS").commit();
+            fragmentManager.beginTransaction().replace(R.id.containerSelector, DetailsFragment.newInstance(selectedForecastId)).addToBackStack("detailsBS").commit();
         } else ((DetailsFragment) fragmentManager.findFragmentById(R.id.containerDetail)).update(selectedForecastId);
     }
 
