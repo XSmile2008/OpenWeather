@@ -131,9 +131,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     private void refreshForecasts() {
-        //RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getApplicationContext()).build();//TODO: catch exception when change realm and delete database
-        //Realm.getInstance(this).close();
-        //Realm.deleteRealm(realmConfiguration);
         Log.i(LOG_TAG, "onRefreshForecasts");
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);

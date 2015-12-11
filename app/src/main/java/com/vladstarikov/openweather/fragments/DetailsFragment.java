@@ -1,6 +1,5 @@
 package com.vladstarikov.openweather.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,15 +14,12 @@ import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.activities.MainActivity;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
-import io.realm.Realm;
-
 /**
  * Created by vladstarikov on 19.11.15.
  */
 public class DetailsFragment extends RealmFragment {
 
     private ForecastHolder holder;
-    private Long forecastId;
 
     public static DetailsFragment newInstance(long id) {//TODO: make this
         Bundle args = new Bundle();
@@ -42,19 +38,19 @@ public class DetailsFragment extends RealmFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (holder == null) holder = new ForecastHolder(view);//TODO: move to onCreateView
-        Bundle args = getArguments();
-        forecastId = args.getLong(MainActivity.FORECAST_ID);
-        if (forecastId != null) updateView();
+        if (holder == null) holder = new ForecastHolder(view);
+        Long forecastId = getArguments().getLong(MainActivity.FORECAST_ID);
+        updateView(forecastId);
     }
 
     public void update(Long forecastId) {
-        this.forecastId = forecastId;
-        if (this.isVisible()) updateView();
+        getArguments().remove(MainActivity.FORECAST_ID);
+        getArguments().putLong(MainActivity.FORECAST_ID, forecastId);
+        if (this.isVisible()) updateView(forecastId);
     }
 
-    private void updateView() {
-        Forecast forecast = getRealm().where(Forecast.class).equalTo("dateUNIX", this.forecastId).findFirst();
+    private void updateView(Long forecastId) {
+        Forecast forecast = getRealm().where(Forecast.class).equalTo("dateUNIX", forecastId).findFirst();
         if (forecast != null) {
             MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
             holder.textViewDateTime.setText(date.toString());
