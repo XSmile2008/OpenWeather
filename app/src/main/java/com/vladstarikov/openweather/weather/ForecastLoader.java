@@ -26,7 +26,7 @@ import io.realm.RealmObject;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class ForecastLoader {
+public class ForecastLoader extends AsyncTask<String, Void, Void> {
 
     private final static String APPID = "da9546c174d073130bb1d1caace0c6c3";
     private final static String SITE = "http://api.openweathermap.org/data/2.5/forecast";
@@ -34,70 +34,68 @@ public class ForecastLoader {
     private final static String MODE = "json";
     private final static String UNITS = "metric";
     private final static String SOURCE = SITE + "?" + "mode=" + MODE + "&units=" + UNITS + "&appid=" + APPID + "&q=";
-
     private final static String IMG_URL = "http://openweathermap.org/img/w/";
 
     Context context;
 
     public ForecastLoader(Context context) {
+        super();
         this.context = context;
     }
 
-    public void loadForecasts(String city) {
-        new ForecastHttpClient().execute(city);
-    }
+    @Override
+    protected Void doInBackground(String... params) {
+        HttpURLConnection urlConnection = null;
+        InputStream is = null;
+        Realm realm = Realm.getInstance(context);
+        try {
+            urlConnection = (HttpURLConnection) (new URL(SOURCE + params[0])).openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            urlConnection.connect();
+            is = urlConnection.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                stringBuilder.append(line);
+            }
 
-    private class ForecastHttpClient extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            HttpURLConnection urlConnection = null;
-            InputStream is  = null;
-            Realm realm = Realm.getInstance(context);
+            //Configure Gson to work with Realm
+            Gson gson = new GsonBuilder()
+                    .setExclusionStrategies(new ExclusionStrategy() {
+                        @Override
+                        public boolean shouldSkipField(FieldAttributes f) {
+                            return f.getDeclaringClass().equals(RealmObject.class);
+                        }
+
+                        @Override
+                        public boolean shouldSkipClass(Class<?> clazz) {
+                            return false;
+                        }
+                    })
+                    .create();
+
+            //parse Json
+            JsonObject forecast5d = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
+            List<Forecast> forecasts = gson.fromJson(forecast5d.getAsJsonArray("list"), new TypeToken<List<Forecast>>() {}.getType());
+
+            //write to database
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(forecasts);//Hint: Forecast must contains @PrimaryKey
+            realm.commitTransaction();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) urlConnection.disconnect();
             try {
-                urlConnection = (HttpURLConnection) (new URL(SOURCE + params[0])).openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-                urlConnection.connect();
-                is = urlConnection.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-
-                //Configure Gson to work with Realm
-                Gson gson = new GsonBuilder()
-                        .setExclusionStrategies(new ExclusionStrategy() {
-                            @Override
-                            public boolean shouldSkipField(FieldAttributes f) {
-                                return f.getDeclaringClass().equals(RealmObject.class);
-                            }
-
-                            @Override
-                            public boolean shouldSkipClass(Class<?> clazz) {
-                                return false;
-                            }
-                        })
-                        .create();
-
-                //parse Json
-                JsonObject forecast5d = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
-                List<Forecast> forecasts = gson.fromJson(forecast5d.getAsJsonArray("list"), new TypeToken<List<Forecast>>(){}.getType());
-
-                //write to database
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(forecasts);//Hint: Forecast must contains @PrimaryKey
-                realm.commitTransaction();
+                if (is != null) is.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                if (urlConnection != null) urlConnection.disconnect();
-                try {if (is != null) is.close();} catch (IOException e) {e.printStackTrace();}
-                realm.close();
             }
-            return null;
+            realm.close();
         }
+        return null;
     }
 }

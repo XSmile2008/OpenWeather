@@ -2,6 +2,7 @@ package com.vladstarikov.openweather.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -19,13 +20,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
-import com.vladstarikov.openweather.fragments.SelectorFragment;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
+import com.vladstarikov.openweather.fragments.SelectorFragment;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
+import com.vladstarikov.openweather.services.ForecastService;
 import com.vladstarikov.openweather.weather.ForecastLoader;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
@@ -48,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
+            startService(new Intent(this, ForecastService.class));
+
             refreshForecasts();
             SelectorFragment selectorFragment = new SelectorFragment();
             fragmentManager.beginTransaction().add(R.id.containerSelector, selectorFragment).commit();
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private void refreshForecasts() {
         Log.i(LOG_TAG, "onRefreshForecasts");
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).loadForecasts(city);
+        if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).execute(city);
         else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
 
         SelectorFragment selectorFragment = (SelectorFragment) fragmentManager.findFragmentById(R.id.containerSelector);

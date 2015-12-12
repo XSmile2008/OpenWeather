@@ -19,7 +19,7 @@ public abstract class DebugFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onAttach()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onAttach()");
         super.onAttach(context);
     }
 
@@ -32,73 +32,73 @@ public abstract class DebugFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onCreateView()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onCreateView()");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onViewCreated()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onViewCreated()");
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onPause() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onPause()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onPause()");
         super.onPause();
     }
 
     @Override
     public void onStop() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onStop()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onStop()");
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onDestroy()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onDestroy()");
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onDetach()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onDetach()");
         super.onDetach();
     }
 
     @Override
     public void onDestroyView() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onDestroyView()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onDestroyView()");
         super.onDestroyView();
     }
 
     @Override
     public void onLowMemory() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onLowMemory()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onLowMemory()");
         super.onLowMemory();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onConfigurationChanged()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onConfigurationChanged()");
         super.onConfigurationChanged(newConfig);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onSaveInstanceState()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onSaveInstanceState()");
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onResume() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onResume()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onResume()");
         super.onResume();
     }
 
     @Override
     public void onStart() {
-        Log.i(MainActivity.LOG_TAG, "Fragment" + getId() + ".onStart()");
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + getId() + ".onStart()");
         super.onStart();
     }
 }
