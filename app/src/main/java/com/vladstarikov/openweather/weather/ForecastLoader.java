@@ -52,7 +52,7 @@ public class ForecastLoader extends AsyncTask<String, Void, Void> {
     }
 
     public void loadForecast(String city) {
-        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + "loadForecast");
+        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".loadForecast(" + city + ")");
         HttpURLConnection urlConnection = null;
         InputStream is = null;
         Realm realm = Realm.getInstance(context);

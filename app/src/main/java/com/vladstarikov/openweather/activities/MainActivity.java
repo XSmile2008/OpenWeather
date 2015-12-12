@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             startService(new Intent(this, ForecastService.class));
-
-            refreshForecasts();
             SelectorFragment selectorFragment = new SelectorFragment();
             fragmentManager.beginTransaction().add(R.id.containerSelector, selectorFragment).commit();
         } else if (savedInstanceState.containsKey(FORECAST_ID)) {
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             case android.R.id.home:
                 onBackPressed();
             case R.id.action_refresh:
-                refreshForecasts();
+                startService(new Intent(getApplicationContext(), ForecastService.class));
                 return true;
             case R.id.action_set_city:
                 LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
@@ -97,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                                 if (editText.getText().toString().length() > 2) {
                                     city = editText.getText().toString();
                                     city = String.format("%S%s", city.substring(0, 1), city.substring(1));
-                                    refreshForecasts();
+                                    //TODO: Set city to shared preferences
+                                    startService(new Intent(getApplicationContext(), ForecastService.class));
                                 }
                             }
                         })
@@ -132,16 +131,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             actionBar.setIcon(null);
             fragmentManager.beginTransaction().replace(R.id.containerSelector, DetailsFragment.newInstance(selectedForecastId)).addToBackStack("detailsBS").commit();
         } else ((DetailsFragment) fragmentManager.findFragmentById(R.id.containerDetail)).update(selectedForecastId);
-    }
-
-    private void refreshForecasts() {
-        Log.i(LOG_TAG, "onRefreshForecasts");
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm.getActiveNetworkInfo() != null) new ForecastLoader(this).execute(city);
-        else Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
-
-        SelectorFragment selectorFragment = (SelectorFragment) fragmentManager.findFragmentById(R.id.containerSelector);
-        if (selectorFragment != null) selectorFragment.refresh();
     }
 
     @Override

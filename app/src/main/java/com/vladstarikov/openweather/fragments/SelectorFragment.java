@@ -1,6 +1,8 @@
 package com.vladstarikov.openweather.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,5 +57,13 @@ public class SelectorFragment extends RealmFragment {
     public void refresh() {
         RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
         if (results != null) adapter.setForecasts(results);
+    }
+
+    class UpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
     }
 }
