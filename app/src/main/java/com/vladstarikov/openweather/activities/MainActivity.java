@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     //TODO: can I override realm getter to format text?
     //TODO: can I create own getter with all StringBuilder to all build weather info into one string?
+    //TODO: can I use multiple Intents in one notification Action?
 
     public static final String LOG_TAG = "neko";
     public static final String FORECAST_ID = "forecastId";

@@ -3,6 +3,7 @@ package com.vladstarikov.openweather.fragments;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,11 +32,27 @@ public class SelectorFragment extends RealmFragment {
 
     private OnItemSelectedListener<Long> selector;
     private ForecastsAdapter adapter;
+    private BroadcastReceiver receiver;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         selector = (OnItemSelectedListener<Long>) context;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.vladstarikov.openweather.FORECAST_UPDATE");
+        receiver = new UpdateReceiver();
+        getContext().registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getContext().unregisterReceiver(receiver);
     }
 
     @Nullable
@@ -56,17 +73,13 @@ public class SelectorFragment extends RealmFragment {
         } else Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
     }
 
-    public void refresh() {
-        RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
-        if (results != null) adapter.setForecasts(results);
-    }
-
     public class UpdateReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + "onReceive()");
-            refresh();
+            Log.i(MainActivity.LOG_TAG, "onReceive()");
+            RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
+            if (results != null) adapter.setForecasts(results);
         }
     }
 }

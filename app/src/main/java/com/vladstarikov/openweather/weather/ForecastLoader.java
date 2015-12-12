@@ -55,7 +55,6 @@ public class ForecastLoader extends AsyncTask<Void, Void, Void> {
     public void loadForecast() {
         Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".loadForecast()");
         String city = PreferenceManager.getDefaultSharedPreferences(context).getString("city", "Cherkasy");
-        Log.i(MainActivity.LOG_TAG, city);
         HttpURLConnection urlConnection = null;
         InputStream is = null;
         Realm realm = Realm.getInstance(context);

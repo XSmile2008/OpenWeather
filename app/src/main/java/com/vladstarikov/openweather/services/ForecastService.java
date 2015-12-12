@@ -65,16 +65,18 @@ public class ForecastService extends Service {
                     Bitmap largeIcon = null;
                     try {
                         largeIcon = Picasso.with(context).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").get();
-                    } catch (IOException e) {e.printStackTrace();}
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                    Intent intent = new Intent();//(context, MainActivity.class);
-                    intent.setAction("com.vladstarikov.openweather.FORECAST_UPDATE");
+                    Intent intent = new Intent(context, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 117, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent pendingIntentActivity = PendingIntent.getActivity(context, 117, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent pendingIntentUpdate = PendingIntent.getBroadcast(context, 117, new Intent("com.vladstarikov.openweather.FORECAST_UPDATE"), PendingIntent.FLAG_CANCEL_CURRENT);
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
-                            .setContentIntent(pendingIntent)
-                            .addAction(R.mipmap.ic_launcher, "Open app", pendingIntent)
+                            .setContentIntent(pendingIntentActivity)
+                            .addAction(R.mipmap.ic_launcher, "Update", pendingIntentUpdate)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setLargeIcon(largeIcon)
                             .setContentTitle(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)))
