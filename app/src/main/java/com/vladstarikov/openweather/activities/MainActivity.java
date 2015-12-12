@@ -28,6 +28,9 @@ import com.vladstarikov.openweather.weather.ForecastLoader;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
+    //TODO: can I override realm getter to format text?
+    //TODO: can I create own getter with all StringBuilder to all build weather info into one string?
+
     public static final String LOG_TAG = "neko";
     public static final String FORECAST_ID = "forecastId";
 

@@ -2,6 +2,7 @@ package com.vladstarikov.openweather.weather;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -10,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.vladstarikov.openweather.activities.MainActivity;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
 import java.io.BufferedReader;
@@ -45,11 +47,17 @@ public class ForecastLoader extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
+        loadForecast(params[0]);
+        return null;
+    }
+
+    public void loadForecast(String city) {
+        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + "loadForecast");
         HttpURLConnection urlConnection = null;
         InputStream is = null;
         Realm realm = Realm.getInstance(context);
         try {
-            urlConnection = (HttpURLConnection) (new URL(SOURCE + params[0])).openConnection();
+            urlConnection = (HttpURLConnection) (new URL(SOURCE + city)).openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
@@ -96,6 +104,5 @@ public class ForecastLoader extends AsyncTask<String, Void, Void> {
             }
             realm.close();
         }
-        return null;
     }
 }
