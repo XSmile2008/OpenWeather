@@ -2,6 +2,7 @@ package com.vladstarikov.openweather.weather;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
@@ -28,7 +29,7 @@ import io.realm.RealmObject;
 /**
  * Created by vladstarikov on 19.11.15.
  */
-public class ForecastLoader extends AsyncTask<String, Void, Void> {
+public class ForecastLoader extends AsyncTask<Void, Void, Void> {
 
     private final static String APPID = "da9546c174d073130bb1d1caace0c6c3";
     private final static String SITE = "http://api.openweathermap.org/data/2.5/forecast";
@@ -46,13 +47,15 @@ public class ForecastLoader extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... params) {
-        loadForecast(params[0]);
+    protected Void doInBackground(Void... params) {
+        loadForecast();
         return null;
     }
 
-    public void loadForecast(String city) {
-        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".loadForecast(" + city + ")");
+    public void loadForecast() {
+        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".loadForecast()");
+        String city = PreferenceManager.getDefaultSharedPreferences(context).getString("city", "Cherkasy");
+        Log.i(MainActivity.LOG_TAG, city);
         HttpURLConnection urlConnection = null;
         InputStream is = null;
         Realm realm = Realm.getInstance(context);

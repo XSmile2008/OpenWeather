@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -17,14 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.fragments.DetailsFragment;
 import com.vladstarikov.openweather.fragments.SelectorFragment;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.services.ForecastService;
-import com.vladstarikov.openweather.weather.ForecastLoader;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
@@ -37,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private FragmentManager fragmentManager;
     private ActionBar actionBar;
 
-    private String city = "Cherkasy";
     private Long selectedForecastId = Long.MIN_VALUE;//TODO
 
     @Override
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                 View promptView = layoutInflater.inflate(R.layout.dialog_city, null, false);
                 final EditText editText = (EditText) promptView.findViewById(R.id.editText);
-                editText.setHint(city);
+                editText.setHint("City name");
 
                 new AlertDialog.Builder(MainActivity.this)
                         .setView(promptView)
@@ -93,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 if (editText.getText().toString().length() > 2) {
-                                    city = editText.getText().toString();
+                                    String city = editText.getText().toString();
                                     city = String.format("%S%s", city.substring(0, 1), city.substring(1));
-                                    //TODO: Set city to shared preferences
+                                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("city", city).commit();
                                     startService(new Intent(getApplicationContext(), ForecastService.class));
                                 }
                             }

@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.vladstarikov.openweather.R;
+import com.vladstarikov.openweather.activities.MainActivity;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.adapters.ForecastsAdapter;
 import com.vladstarikov.openweather.weather.realm.Forecast;
@@ -59,11 +61,12 @@ public class SelectorFragment extends RealmFragment {
         if (results != null) adapter.setForecasts(results);
     }
 
-    class UpdateReceiver extends BroadcastReceiver {
+    public class UpdateReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + "onReceive()");
+            refresh();
         }
     }
 }

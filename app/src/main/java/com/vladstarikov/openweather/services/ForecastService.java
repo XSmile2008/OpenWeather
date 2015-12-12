@@ -48,7 +48,7 @@ public class ForecastService extends Service {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                new ForecastLoader(context).loadForecast("Cherkasy");
+                new ForecastLoader(context).loadForecast();
                 Realm realm = Realm.getInstance(context);
                 Forecast forecast = realm.where(Forecast.class).greaterThan("dateUNIX", System.currentTimeMillis() / 1000L).findFirst();
                 if (forecast != null) {
@@ -67,9 +67,10 @@ public class ForecastService extends Service {
                         largeIcon = Picasso.with(context).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").get();
                     } catch (IOException e) {e.printStackTrace();}
 
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent();//(context, MainActivity.class);
+                    intent.setAction("com.vladstarikov.openweather.FORECAST_UPDATE");
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 117, new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 117, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                             .setContentIntent(pendingIntent)

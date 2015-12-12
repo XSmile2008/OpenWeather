@@ -27,6 +27,12 @@
         <service
             android:name=".services.ForecastService"
             android:exported="false" />
+
+        <receiver android:name=".fragments.SelectorFragment$UpdateReceiver">
+            <intent-filter>
+                <action android:name="com.vladstarikov.openweather.FORECAST_UPDATE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
