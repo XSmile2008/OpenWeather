@@ -35,6 +35,7 @@
                 android:layout_row="0"
                 android:layout_rowSpan="2"
                 android:layout_gravity="bottom"
+                android:background="@android:drawable/stat_notify_sync_noanim"
                 android:contentDescription="weather icon" />
 
             <TextView

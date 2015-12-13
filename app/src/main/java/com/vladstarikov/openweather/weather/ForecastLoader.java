@@ -48,12 +48,12 @@ public class ForecastLoader extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        loadForecast();
+        inThisThread();
         return null;
     }
 
-    public void loadForecast() {
-        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".loadForecast()");
+    public void inThisThread() {
+        Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".inThisThread()");
         String city = PreferenceManager.getDefaultSharedPreferences(context).getString("city", "Cherkasy");
         HttpURLConnection urlConnection = null;
         InputStream is = null;

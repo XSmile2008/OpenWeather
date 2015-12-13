@@ -48,7 +48,7 @@ public class ForecastService extends Service {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                new ForecastLoader(context).loadForecast();
+                new ForecastLoader(context).inThisThread();
                 Realm realm = Realm.getInstance(context);
                 Forecast forecast = realm.where(Forecast.class).greaterThan("dateUNIX", System.currentTimeMillis() / 1000L).findFirst();
                 if (forecast != null) {
@@ -71,18 +71,18 @@ public class ForecastService extends Service {
 
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    PendingIntent pendingIntentActivity = PendingIntent.getActivity(context, 117, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                    PendingIntent pendingIntentUpdate = PendingIntent.getBroadcast(context, 117, new Intent("com.vladstarikov.openweather.FORECAST_UPDATE"), PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent pendingIntentActivity = PendingIntent.getActivity(context, 117, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntentUpdate = PendingIntent.getBroadcast(context, 117, new Intent("com.vladstarikov.openweather.FORECAST_UPDATE"), PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                             .setContentIntent(pendingIntentActivity)
-                            .addAction(R.mipmap.ic_launcher, "Update", pendingIntentUpdate)
-                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .addAction(android.R.drawable.stat_notify_sync_noanim, "Update", pendingIntentUpdate)
+                            .setSmallIcon(R.drawable.ic_stat_ic_launcher)
                             .setLargeIcon(largeIcon)
                             .setContentTitle(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)))
                             .setContentText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()))
                             .setSubText(builder.toString())
-                            .setPriority(NotificationCompat.PRIORITY_MIN);
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                     NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     notificationManager.notify(1, notificationBuilder.build());
                 }
