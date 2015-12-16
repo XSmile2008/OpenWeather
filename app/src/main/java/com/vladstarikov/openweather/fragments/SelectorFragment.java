@@ -78,7 +78,7 @@ public class SelectorFragment extends RealmFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(MainActivity.LOG_TAG, "onReceive()");
-            RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();//TODO: use this in onViewCreated
+            RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
             if (results != null) adapter.setForecasts(results);
         }
     }

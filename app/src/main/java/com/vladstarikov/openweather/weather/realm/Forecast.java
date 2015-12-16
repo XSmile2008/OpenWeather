@@ -39,11 +39,11 @@ public class Forecast extends RealmObject implements Serializable{
         this.main = main;
     }
 
-    public RealmList<Weather> getWeather() {//TODO:
+    public RealmList<Weather> getWeather() {
         return weather;
     }
 
-    public void setWeather(RealmList<Weather> weather) {//TODO:
+    public void setWeather(RealmList<Weather> weather) {
         this.weather = weather;
     }
 

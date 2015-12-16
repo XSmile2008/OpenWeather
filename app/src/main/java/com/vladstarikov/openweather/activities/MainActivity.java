@@ -1,6 +1,5 @@
 package com.vladstarikov.openweather.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -26,9 +25,13 @@ import com.vladstarikov.openweather.services.ForecastService;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
-    //TODO: can I override realm getter to format text?
-    //TODO: can I create own getter with all StringBuilder to all build weather info into one string?
-    //TODO: can I use multiple Intents in one notification Action?
+    //TODO: can I override realm getter to format text?//No
+    //TODO: can I create own getter with all StringBuilder to all build weather info into one string?//NO
+    //TODO: can I use multiple Intents in one notification Action?//NO
+    //TODO: can I use activity Intent and broadcast in one Pendring intent?//NO
+
+    //TODO: use getDefaultInstance
+    //TODO: Add City to database
 
     public static final String LOG_TAG = "neko";
     public static final String FORECAST_ID = "forecastId";
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private FragmentManager fragmentManager;
     private ActionBar actionBar;
 
-    private Long selectedForecastId = Long.MIN_VALUE;//TODO
+    private Long selectedForecastId = Long.MIN_VALUE;//TODO:
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

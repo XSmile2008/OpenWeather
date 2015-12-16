@@ -21,7 +21,7 @@ public class DetailsFragment extends RealmFragment {
 
     private ForecastHolder holder;
 
-    public static DetailsFragment newInstance(long id) {//TODO: make this
+    public static DetailsFragment newInstance(long id) {
         Bundle args = new Bundle();
         args.putLong(MainActivity.FORECAST_ID, id);
         DetailsFragment detailsFragment = new DetailsFragment();
