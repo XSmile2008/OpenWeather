@@ -49,7 +49,7 @@ public class ForecastService extends Service {
             @Override
             public void run() {
                 new ForecastLoader(context).inThisThread();
-                Realm realm = Realm.getInstance(context);
+                Realm realm = Realm.getDefaultInstance();
                 Forecast forecast = realm.where(Forecast.class).greaterThan("dateUNIX", System.currentTimeMillis() / 1000L).findFirst();
                 if (forecast != null) {
                     StringBuilder builder = new StringBuilder();

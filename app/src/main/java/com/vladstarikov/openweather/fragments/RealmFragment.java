@@ -14,7 +14,7 @@ public abstract class RealmFragment extends DebugFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realm = Realm.getInstance(getContext());//TODO: use getDefaultInstance
+        realm = Realm.getDefaultInstance();//TODO: use getDefaultInstance
     }
 
     @Override

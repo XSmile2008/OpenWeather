@@ -25,12 +25,6 @@ import com.vladstarikov.openweather.services.ForecastService;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
-    //TODO: can I override realm getter to format text?//No
-    //TODO: can I create own getter with all StringBuilder to all build weather info into one string?//NO
-    //TODO: can I use multiple Intents in one notification Action?//NO
-    //TODO: can I use activity Intent and broadcast in one Pendring intent?//NO
-
-    //TODO: use getDefaultInstance
     //TODO: Add City to database
 
     public static final String LOG_TAG = "neko";

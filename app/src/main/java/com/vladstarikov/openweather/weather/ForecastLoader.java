@@ -57,7 +57,7 @@ public class ForecastLoader extends AsyncTask<Void, Void, Void> {
         String city = PreferenceManager.getDefaultSharedPreferences(context).getString("city", "Cherkasy");
         HttpURLConnection urlConnection = null;
         InputStream is = null;
-        Realm realm = Realm.getInstance(context);//TODO: use getDefaultInstance
+        Realm realm = Realm.getDefaultInstance();//TODO: use getDefaultInstance
         try {
             urlConnection = (HttpURLConnection) (new URL(SOURCE + city)).openConnection();
             urlConnection.setRequestMethod("GET");
