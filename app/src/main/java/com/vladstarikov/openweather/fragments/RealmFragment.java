@@ -19,8 +19,8 @@ public abstract class RealmFragment extends DebugFragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         realm.close();
+        super.onDestroy();
     }
 
     protected Realm getRealm() {
