@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso;
 import com.vladstarikov.openweather.util.MyDateFormatter;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.activities.MainActivity;
+import com.vladstarikov.openweather.weather.ForecastLoader;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
 /**
@@ -63,7 +64,7 @@ public class DetailsFragment extends RealmFragment {
             if (forecast.getSnow() != null && forecast.getSnow().getSnowiness() != 0) holder.textViewDetails.append(String.format("\nSnow: %.3f", forecast.getSnow().getSnowiness()));
             holder.textViewDetails.append(String.format("\nClouds: %d %%", forecast.getClouds().getCloudiness()));
             holder.textViewDetails.append(String.format("\nWind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
-            Picasso.with(getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
+            Picasso.with(getContext()).load(ForecastLoader.IMG_URL + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
         }
     }
 

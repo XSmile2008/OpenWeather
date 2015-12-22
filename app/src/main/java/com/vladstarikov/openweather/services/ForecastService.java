@@ -44,7 +44,16 @@ public class ForecastService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         Log.i(MainActivity.LOG_TAG, this.getClass().getName());
-        Timer timer = new Timer();
+
+        new ForecastLoader(getApplicationContext()) {
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                sendBroadcast(new Intent("com.vladstarikov.openweather.FORECAST_UPDATE"));
+            }
+        }.execute();
+
+        Timer timer = new Timer();//TODO : check that you not create multiple timers
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -64,7 +73,7 @@ public class ForecastService extends Service {
 
                     Bitmap largeIcon = null;
                     try {
-                        largeIcon = Picasso.with(context).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").get();
+                        largeIcon = Picasso.with(context).load(ForecastLoader.IMG_URL + forecast.getWeather().get(0).getIcon() + ".png").get();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -88,7 +97,7 @@ public class ForecastService extends Service {
                 }
                 realm.close();
             }
-        }, 0L, 60000);
+        }, 0L, 180 * 1000);
         return START_STICKY;//super.onStartCommand(intent, flags, startId);
     }
 

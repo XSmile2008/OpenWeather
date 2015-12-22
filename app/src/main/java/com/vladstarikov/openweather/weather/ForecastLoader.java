@@ -37,7 +37,7 @@ public class ForecastLoader extends AsyncTask<Void, Void, Void> {
     private final static String MODE = "json";
     private final static String UNITS = "metric";
     private final static String SOURCE = SITE + "?" + "mode=" + MODE + "&units=" + UNITS + "&appid=" + APPID + "&q=";
-    private final static String IMG_URL = "http://openweathermap.org/img/w/";
+    public final static String IMG_URL = "http://openweathermap.org/img/w/";
 
     Context context;
 

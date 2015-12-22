@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     //TODO: Add City to database
     //TODO: Fix first load
-    //TODO: Add spinner when load data
+    //TODO: Add spinner when load data //SwipeRefreshLayout
 
     public static final String LOG_TAG = "neko";
     public static final String FORECAST_ID = "forecastId";

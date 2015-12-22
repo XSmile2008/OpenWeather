@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 import com.vladstarikov.openweather.util.MyDateFormatter;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
+import com.vladstarikov.openweather.weather.ForecastLoader;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
 import io.realm.RealmResults;
@@ -48,7 +49,7 @@ public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.Fore
         holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
         holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
         holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
-        Picasso.with(holder.imageView.getContext()).load("http://openweathermap.org/img/w/" + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
+        Picasso.with(holder.imageView.getContext()).load(ForecastLoader.IMG_URL + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
     }
 
     @Override
