@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.vladstarikov.openweather.MyDateFormatter;
+import com.vladstarikov.openweather.util.MyDateFormatter;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.weather.realm.Forecast;

@@ -1,4 +1,4 @@
-package com.vladstarikov.openweather;
+package com.vladstarikov.openweather.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

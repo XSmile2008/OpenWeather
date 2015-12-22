@@ -12,52 +12,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="horizontal"
         android:padding="@dimen/cardview_padding">
 
         <TextView
             android:id="@+id/textViewDateTime"
             style="@style/SmallText"
             android:layout_width="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
-        <GridLayout
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:contentDescription="weather icon" />
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="0"
-                android:layout_rowSpan="2"
-                android:layout_gravity="bottom"
-                android:background="@android:drawable/stat_notify_sync_noanim"
-                android:contentDescription="weather icon" />
-
             <TextView
                 android:id="@+id/textViewTemp"
                 style="@style/MediumText"
-                android:layout_column="1"
-                android:layout_row="0"
                 android:layout_gravity="center_horizontal"/>
 
             <TextView
                 android:id="@+id/textViewTempMinMax"
                 style="@style/SmallText"
-                android:layout_column="1"
-                android:layout_row="1"
-                android:layout_gravity="center_horizontal"/>
-        </GridLayout>
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewDescription"
             style="@style/SmallText"
             android:layout_width="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 

@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            startService(new Intent(this, ForecastService.class));
-            SelectorFragment selectorFragment = new SelectorFragment();
-            fragmentManager.beginTransaction().add(R.id.containerSelector, selectorFragment).commit();
+            fragmentManager.beginTransaction().add(R.id.containerSelector, new SelectorFragment()).commit();
         } else if (savedInstanceState.containsKey(FORECAST_ID)) {
             selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
         }

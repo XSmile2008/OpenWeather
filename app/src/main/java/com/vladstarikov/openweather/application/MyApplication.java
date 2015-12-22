@@ -1,6 +1,9 @@
-package com.vladstarikov.openweather;
+package com.vladstarikov.openweather.application;
 
 import android.app.Application;
+import android.content.Intent;
+
+import com.vladstarikov.openweather.services.ForecastService;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -15,6 +18,7 @@ public class MyApplication extends Application {
         super.onCreate();
         RealmConfiguration configuration = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(configuration);
+        startService(new Intent(this, ForecastService.class));
     }
 
 }
