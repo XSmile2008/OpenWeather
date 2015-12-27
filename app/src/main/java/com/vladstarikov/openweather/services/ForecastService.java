@@ -28,11 +28,13 @@ import io.realm.Realm;
  */
 public class ForecastService extends Service {
 
-    Context context = this;//TODO
+    private Context context = this;//TODO
+    private Timer timer;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + "onCreate");
     }
 
     @Nullable
@@ -43,7 +45,7 @@ public class ForecastService extends Service {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        Log.i(MainActivity.LOG_TAG, this.getClass().getName());
+        Log.i(MainActivity.LOG_TAG, this.getClass().getSimpleName() + ".onStartCommand");
 
         new ForecastLoader(getApplicationContext()) {
             @Override
@@ -53,7 +55,11 @@ public class ForecastService extends Service {
             }
         }.execute();
 
-        Timer timer = new Timer();//TODO : check that you not create multiple timers
+        if (timer != null ) {
+            timer.cancel();
+            timer.purge();
+        }
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

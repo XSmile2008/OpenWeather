@@ -25,8 +25,6 @@ import com.vladstarikov.openweather.services.ForecastService;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
-    //TODO: Add City to database
-    //TODO: Fix first load
     //TODO: Add spinner when load data //SwipeRefreshLayout
 
     public static final String LOG_TAG = "neko";
@@ -58,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 fragmentManager.beginTransaction().add(R.id.containerDetail, DetailsFragment.newInstance(selectedForecastId)).commit();
             } else onItemSelected(selectedForecastId);
         }
-        if (fragmentManager.getFragments() != null) Log.e(LOG_TAG, fragmentManager.getFragments().toString());
     }
 
     @Override
@@ -125,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setIcon(null);
             fragmentManager.beginTransaction().replace(R.id.containerSelector, DetailsFragment.newInstance(selectedForecastId)).addToBackStack("detailsBS").commit();
-        } else ((DetailsFragment) fragmentManager.findFragmentById(R.id.containerDetail)).update(selectedForecastId);
+        } else
+            ((DetailsFragment) fragmentManager.findFragmentById(R.id.containerDetail)).update(selectedForecastId);
     }
 
     @Override
