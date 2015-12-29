@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.squareup.picasso.Picasso;
@@ -27,6 +28,10 @@ import io.realm.Realm;
  * Created by Starikov on 11.12.15.
  */
 public class ForecastService extends Service {
+
+    public static int NOTIFICATION_ID = 117;
+    public static int REQUEST_REFRESH = 0;
+    public static int REQUEST_UPDATE = 1;
 
     private Context context = this;//TODO
     private Timer timer;
@@ -86,8 +91,8 @@ public class ForecastService extends Service {
 
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    PendingIntent pendingIntentActivity = PendingIntent.getActivity(context, 117, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    PendingIntent pendingIntentUpdate = PendingIntent.getBroadcast(context, 117, new Intent("com.vladstarikov.openweather.FORECAST_UPDATE"), PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntentActivity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntentUpdate = PendingIntent.getBroadcast(context, 0, new Intent("com.vladstarikov.openweather.FORECAST_UPDATE"), PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                             .setContentIntent(pendingIntentActivity)
@@ -98,12 +103,11 @@ public class ForecastService extends Service {
                             .setContentText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()))
                             .setSubText(builder.toString())
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(1, notificationBuilder.build());
+                    NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notificationBuilder.build());
                 }
                 realm.close();
             }
-        }, 0L, 180 * 1000);
+        }, 60 * 1000, 60 * 1000);
         return START_STICKY;//super.onStartCommand(intent, flags, startId);
     }
 

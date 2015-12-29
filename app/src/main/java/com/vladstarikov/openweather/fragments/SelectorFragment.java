@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.activities.MainActivity;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
 import com.vladstarikov.openweather.adapters.ForecastsAdapter;
+import com.vladstarikov.openweather.services.ForecastService;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
 import java.util.Date;
@@ -80,6 +82,7 @@ public class SelectorFragment extends RealmFragment {
             Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".onReceive()");
             RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
             if (results != null) adapter.setForecasts(results);
+            NotificationManagerCompat.from(context).cancel(ForecastService.NOTIFICATION_ID);
         }
     }
 }
