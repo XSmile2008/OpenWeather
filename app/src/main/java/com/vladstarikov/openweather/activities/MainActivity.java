@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         switch (id) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
             case R.id.action_refresh:
                 startService(new Intent(getApplicationContext(), ForecastService.class));
                 return true;
