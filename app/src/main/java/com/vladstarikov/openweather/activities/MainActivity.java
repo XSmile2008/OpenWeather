@@ -51,10 +51,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
 
         if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
-            if (fragmentManager.getBackStackEntryCount() > 0) onBackPressed();
-            if (fragmentManager.findFragmentById(R.id.containerDetail) == null) {
+            if (fragmentManager.getBackStackEntryCount() > 0)
+                onBackPressed();
+            if (fragmentManager.findFragmentById(R.id.containerDetail) == null)
                 fragmentManager.beginTransaction().add(R.id.containerDetail, DetailsFragment.newInstance(selectedForecastId)).commit();
-            } else onItemSelected(selectedForecastId);
+            else
+                onItemSelected(selectedForecastId);
         }
     }
 
@@ -122,7 +124,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if (findViewById(R.id.containerDetail) == null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setIcon(null);
-            fragmentManager.beginTransaction().replace(R.id.containerSelector, DetailsFragment.newInstance(selectedForecastId)).addToBackStack("detailsBS").commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.containerSelector, DetailsFragment.newInstance(selectedForecastId))
+                    .addToBackStack("detailsBS")
+                    .commit();
         } else
             ((DetailsFragment) fragmentManager.findFragmentById(R.id.containerDetail)).update(selectedForecastId);
     }

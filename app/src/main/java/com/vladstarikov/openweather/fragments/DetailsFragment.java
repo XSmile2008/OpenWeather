@@ -56,12 +56,14 @@ public class DetailsFragment extends RealmFragment {
             MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
             holder.textViewDateTime.setText(date.toString());
             holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
-            holder.textViewTemp.setText(String.format("%.1f \u2103 ", forecast.getMain().getTemp()));
-            holder.textViewTempMinMax.setText(String.format("%.1f - %.1f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
+            holder.textViewTemp.setText(String.format("%.0f \u2103 ", forecast.getMain().getTemp()));
+            holder.textViewTempMinMax.setText(String.format("%.0f - %.0f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
             holder.textViewDetails.setText(String.format("Pleasure: %.2f hpa", forecast.getMain().getPressure()));
             holder.textViewDetails.append(String.format("\nHumidity: %d %%", forecast.getMain().getHumidity()));
-            if (forecast.getRain() != null && forecast.getRain().getRainiest() != 0) holder.textViewDetails.append(String.format("\nRain: %.3f", forecast.getRain().getRainiest()));
-            if (forecast.getSnow() != null && forecast.getSnow().getSnowiness() != 0) holder.textViewDetails.append(String.format("\nSnow: %.3f", forecast.getSnow().getSnowiness()));
+            if (forecast.getRain() != null && forecast.getRain().getRainiest() != 0)
+                holder.textViewDetails.append(String.format("\nRain: %.3f", forecast.getRain().getRainiest()));
+            if (forecast.getSnow() != null && forecast.getSnow().getSnowiness() != 0)
+                holder.textViewDetails.append(String.format("\nSnow: %.3f", forecast.getSnow().getSnowiness()));
             holder.textViewDetails.append(String.format("\nClouds: %d %%", forecast.getClouds().getCloudiness()));
             holder.textViewDetails.append(String.format("\nWind: %.2f m/s %d", forecast.getWind().getSpeed(), forecast.getWind().getDeg()));
             Picasso.with(getContext()).load(ForecastLoader.IMG_URL + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
