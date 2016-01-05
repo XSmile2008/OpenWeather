@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.vladstarikov.openweather.util.MyDateFormatter;
 import com.vladstarikov.openweather.R;
 import com.vladstarikov.openweather.interfaces.OnItemSelectedListener;
+import com.vladstarikov.openweather.weather.ForecastFormatter;
 import com.vladstarikov.openweather.weather.ForecastLoader;
 import com.vladstarikov.openweather.weather.realm.Forecast;
 
@@ -43,13 +43,12 @@ public class ForecastsAdapter extends RecyclerView.Adapter<ForecastsAdapter.Fore
 
     @Override
     public void onBindViewHolder(ForecastHolder holder, int position) {
-        Forecast forecast = forecasts.get(position);
-        MyDateFormatter date = new MyDateFormatter(forecast.getDateUNIX() * 1000L);
-        holder.textViewDateTime.setText(String.format("%s %s", date.getDate(), date.getTime()));
-        holder.textViewTemp.setText(String.format("%.0f \u2103 ", forecast.getMain().getTemp()));
-        holder.textViewTempMinMax.setText(String.format("%.0f - %.0f \u2103", forecast.getMain().getTemp_min(), forecast.getMain().getTemp_max()));
-        holder.textViewDescription.setText(String.format("%S%s", forecast.getWeather().get(0).getDescription().substring(0, 1), forecast.getWeather().get(0).getDescription().substring(1)));
-        Picasso.with(holder.imageView.getContext()).load(ForecastLoader.IMG_URL + forecast.getWeather().get(0).getIcon() + ".png").into(holder.imageView);
+        ForecastFormatter forecastFormatter = new ForecastFormatter(forecasts.get(position));
+        holder.textViewDateTime.setText(String.format("%s %s", forecastFormatter.getDate(), forecastFormatter.getTime()));
+        holder.textViewTemp.setText(forecastFormatter.getTemp());
+        holder.textViewTempMinMax.setText(forecastFormatter.getTempMinMax());
+        holder.textViewDescription.setText(forecastFormatter.getDescription());
+        Picasso.with(holder.imageView.getContext()).load(forecastFormatter.getIMGURL()).into(holder.imageView);
     }
 
     @Override

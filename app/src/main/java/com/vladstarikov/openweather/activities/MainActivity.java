@@ -26,6 +26,7 @@ import com.vladstarikov.openweather.services.ForecastService;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
     //TODO: Add spinner when load data //SwipeRefreshLayout
+    //TODO: check icon/back button when phone rotate
 
     public static final String LOG_TAG = "neko";
     public static final String FORECAST_ID = "forecastId";
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private FragmentManager fragmentManager;
     private ActionBar actionBar;
 
-    private Long selectedForecastId = Long.MIN_VALUE;//TODO:
+    private Long selectedForecastId = Long.MIN_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
-                        }).create().show();
+                        })
+                        .create()
+                        .show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

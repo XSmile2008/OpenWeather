@@ -66,7 +66,10 @@ public class SelectorFragment extends RealmFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
+        RealmResults<Forecast> results = getRealm()
+                .where(Forecast.class)
+                .greaterThan("dateUNIX", new Date().getTime()/1000L)
+                .findAll();
         if (results != null) {
             adapter = new ForecastsAdapter(selector, results);
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -80,7 +83,10 @@ public class SelectorFragment extends RealmFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(MainActivity.LOG_TAG, getClass().getSimpleName() + ".onReceive()");
-            RealmResults<Forecast> results = getRealm().where(Forecast.class).greaterThan("dateUNIX", new Date().getTime()/1000L).findAll();
+            RealmResults<Forecast> results = getRealm()
+                    .where(Forecast.class)
+                    .greaterThan("dateUNIX", new Date().getTime()/1000L)
+                    .findAll();
             if (results != null) adapter.setForecasts(results);
             NotificationManagerCompat.from(context).cancel(ForecastService.NOTIFICATION_ID);
         }
