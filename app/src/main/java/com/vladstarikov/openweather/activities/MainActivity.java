@@ -26,7 +26,6 @@ import com.vladstarikov.openweather.services.ForecastService;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener<Long> {
 
     //TODO: Add spinner when load data //SwipeRefreshLayout
-    //TODO: check icon/back button when phone rotate
 
     public static final String LOG_TAG = "neko";
     public static final String FORECAST_ID = "forecastId";
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(FORECAST_ID, selectedForecastId);
+        outState.putLong(FORECAST_ID, selectedForecastId);
     }
 
     @Override
