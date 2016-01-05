@@ -42,22 +42,24 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         actionBar = getSupportActionBar();
-        actionBar.setIcon(R.mipmap.ic_launcher);
 
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            fragmentManager.beginTransaction().add(R.id.containerSelector, new SelectorFragment()).commit();
+            fragmentManager.beginTransaction()
+                    .add(R.id.containerSelector, new SelectorFragment())
+                    .commit();
         } else if (savedInstanceState.containsKey(FORECAST_ID)) {
             selectedForecastId = savedInstanceState.getLong(FORECAST_ID);
         }
 
+        checkBackStack();
+
         if (findViewById(R.id.containerDetail) != null) {//if Tablet mode
-            if (fragmentManager.getBackStackEntryCount() > 0)
-                onBackPressed();
-            if (fragmentManager.findFragmentById(R.id.containerDetail) == null)
-                fragmentManager.beginTransaction().add(R.id.containerDetail, DetailsFragment.newInstance(selectedForecastId)).commit();
-            else
-                onItemSelected(selectedForecastId);
+            if (fragmentManager.findFragmentById(R.id.containerDetail) == null) {
+                fragmentManager.beginTransaction()
+                        .add(R.id.containerDetail, DetailsFragment.newInstance(selectedForecastId))
+                        .commit();
+            } else onItemSelected(selectedForecastId);
         }
     }
 
@@ -138,7 +140,17 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setIcon(R.mipmap.ic_launcher);
+        checkBackStack();
+    }
+
+    private void checkBackStack() {
+        if (fragmentManager.getBackStackEntryCount() == 0) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setIcon(R.mipmap.ic_launcher);
+        } else {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setIcon(null);
+            if (findViewById(R.id.containerDetail) != null) onBackPressed();
+        }
     }
 }
